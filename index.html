@@ -172,7 +172,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.45}
 .tbtns{display:flex;gap:6px}
 .tbtns button{flex:1;background:var(--fonte);border:1px solid var(--trait);color:var(--craie);border-radius:9px;
  padding:10px 2px;font-family:'Chivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:.06em;cursor:pointer}
-.tbtns button.stop{color:var(--brume)}
+.tbtns button.recent{border-color:rgba(245,192,68,.45)}
+.trow{display:flex;gap:6px;margin-top:6px}
+.trow input{flex:1;padding:10px;font-size:14px;text-align:center;font-family:'IBM Plex Mono',monospace}
+.trow .tgo{background:var(--p15);color:#151C25;border:none;border-radius:9px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer}
+.trow .tstop{background:transparent;border:1px solid var(--trait);color:var(--brume);border-radius:9px;padding:10px 14px;font-size:13px;cursor:pointer}
 .tbtns button:active{background:var(--trait)}
 .delta{margin-left:7px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;padding:1px 5px;border-radius:99px;letter-spacing:0}
 .delta.up{color:#151C25;background:var(--p10)}
@@ -216,6 +220,56 @@ textarea{resize:vertical;min-height:70px;line-height:1.45}
 .vol .tr{flex:1;height:9px;background:var(--fonte-2);border-radius:99px;overflow:hidden}
 .vol .fl{height:100%;border-radius:99px}
 .vol .n{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--brume);width:20px;text-align:right;flex:none}
+.dayrowcfg{padding:10px 0;border-bottom:1px solid var(--trait)}
+.dayrowcfg:last-child{border-bottom:none}
+.dayrowcfg .dl{font-size:13px;font-weight:600;margin-bottom:7px}
+.dayrowcfg .dl i{font-style:normal;color:var(--brume);font-weight:400;font-size:11.5px;margin-left:6px}
+.dpick{display:flex;gap:4px}
+.dpick button{flex:1;background:var(--fonte-2);border:1px solid var(--trait);color:var(--brume);border-radius:7px;
+ padding:9px 2px;font-family:'Chivo',sans-serif;font-weight:700;font-size:11px;cursor:pointer}
+.dpick button.on{background:var(--p20);border-color:var(--p20);color:#fff}
+.addex{display:none;background:var(--fonte-2);border:1px solid var(--trait);border-radius:10px;padding:12px;margin-bottom:9px}
+.addex.on{display:block}
+.ss{display:inline-block;font-family:'Chivo',sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;
+ background:rgba(167,139,250,.2);color:var(--p35);border:1px solid rgba(167,139,250,.45);
+ padding:1px 6px;border-radius:99px;margin-left:7px;vertical-align:middle}
+.ex.mine{border-left:2px solid var(--p10)}
+.exdel{background:none;border:none;color:var(--brume);font-size:17px;cursor:pointer;padding:0 3px;flex:none;align-self:flex-start}
+.livebar{height:5px;background:var(--fonte-2);border-radius:99px;overflow:hidden;margin-bottom:14px}
+.livefill{height:100%;width:0;background:var(--p15);border-radius:99px;transition:width .3s}
+.livemain h3{font-family:'Chivo',sans-serif;font-size:23px;font-weight:900;letter-spacing:-.02em;line-height:1.15;margin-bottom:6px}
+.livemain .lsets{font-family:'IBM Plex Mono',monospace;font-size:17px;color:var(--p15);font-weight:600;margin-bottom:4px}
+.livemain .lmus{font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--brume);margin-bottom:10px}
+.livemain .lmus b{color:var(--p20)}
+.livemain .ltip{font-size:12.5px;color:var(--brume);line-height:1.55;margin-bottom:10px}
+.livemain .lalt{font-size:11.5px;color:var(--brume);padding-left:9px;border-left:2px solid var(--trait);margin-bottom:12px;line-height:1.45}
+.livemain .lalt b{color:var(--p10)}
+.lload{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.lload label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--brume)}
+.lload input{width:110px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:16px;padding:11px}
+.livenav{display:flex;gap:8px;margin-top:14px}
+.livenav button{flex:1;border-radius:10px;padding:13px 8px;font-family:'Chivo',sans-serif;font-weight:700;
+ font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:1px solid var(--trait)}
+.livenav .lprev{background:transparent;color:var(--brume)}
+.livenav .lnext{background:var(--p10);border-color:var(--p10);color:#fff;flex:2}
+.livenext{margin-top:11px;font-size:12px;color:var(--brume);padding-top:11px;border-top:1px solid var(--trait)}
+.livenext b{color:var(--craie)}
+.litem{padding-bottom:4px}
+.litem+.litem{margin-top:14px;padding-top:14px;border-top:1px dashed var(--trait)}
+.litem h3{font-family:'Chivo',sans-serif;font-size:21px;font-weight:900;letter-spacing:-.02em;line-height:1.15;margin-bottom:6px}
+.lsshead{background:rgba(167,139,250,.14);border:1px solid rgba(167,139,250,.4);color:var(--p35);
+ border-radius:9px;padding:9px 11px;font-size:11.5px;font-weight:600;margin-bottom:14px;line-height:1.45}
+.lallhead{font-size:11px;color:var(--brume);margin:12px 0 8px;letter-spacing:.02em}
+.lrow{display:flex;align-items:stretch;gap:5px;margin-bottom:5px}
+.lrow .lgo{flex:1;display:flex;align-items:center;gap:9px;background:var(--fonte-2);border:1px solid var(--trait);
+ color:var(--craie);border-radius:9px;padding:9px 11px;cursor:pointer;text-align:left;min-width:0}
+.lrow.now .lgo{border-color:var(--p15);background:rgba(245,192,68,.1)}
+.lrow .ln{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--brume);flex:none}
+.lrow .lt{font-size:13px;min-width:0;line-height:1.3}
+.lrow .lt i{display:block;font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--brume);margin-top:2px}
+.lrow .lmv{background:var(--fonte-2);border:1px solid var(--trait);color:var(--brume);border-radius:9px;
+ width:34px;flex:none;cursor:pointer;font-size:11px}
+.lrow .lmv:active{background:var(--trait)}
 .range{display:flex;gap:5px;margin-bottom:13px}
 .range button{flex:1;background:var(--fonte-2);border:1px solid var(--trait);color:var(--brume);border-radius:9px;padding:9px 2px;
  font-family:'Chivo',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
@@ -351,8 +405,8 @@ nav button.on svg{stroke:var(--p15)}
     <div class="stats four">
       <div class="stat"><div class="v num" id="sBase">0</div><div class="k">Base</div></div>
       <div class="stat"><div class="v num" style="color:var(--p10)" id="sSteps">0</div><div class="k">Pas</div></div>
-      <div class="stat"><div class="v num" style="color:var(--p20)" id="sSport">0</div><div class="k">Séance</div></div>
-      <div class="stat"><div class="v num" id="sTot">0</div><div class="k">Total</div></div>
+      <div class="stat"><div class="v num" style="color:var(--p20)" id="sSport">0</div><div class="k">Séance 50 %</div></div>
+      <div class="stat"><div class="v num" id="sTot">0</div><div class="k">Retenu</div></div>
     </div>
     <div class="note">Tes <b>pas comptent à 100 %</b> : plus tu marches, plus tu manges. Les séances ne comptent qu'à <b>50 %</b>, parce que les formules surestiment la dépense en salle de 20 à 30 %.</div>
   </div>
@@ -432,21 +486,58 @@ nav button.on svg{stroke:var(--p15)}
 
   <div class="sess-tabs" id="sessTabs"></div>
 
+  <div class="card" id="liveCard" style="display:none">
+    <div class="eyebrow">En cours<span id="liveProg">-</span></div>
+    <div class="livebar"><div class="livefill" id="liveFill"></div></div>
+    <div class="livemain" id="liveMain"></div>
+    <div id="liveTimerSlot"></div>
+    <button class="btn gold" id="liveRest" style="margin-top:12px">Série suivante — lancer le repos</button>
+    <div class="livenav">
+      <button class="lprev" id="livePrev">Précédent</button>
+      <button class="lnext" id="liveNext">Suivant</button>
+    </div>
+    <div class="livenext" id="liveAfter"></div>
+    <button class="btn ghost" id="liveToggle" style="margin-top:10px">Voir tous les exercices</button>
+    <div id="liveAll"></div>
+  </div>
+
   <div class="card">
     <div class="eyebrow" id="sessTitle">Séance</div>
+    <button class="btn gold" id="startSess">Commencer la séance</button>
+    <div style="height:12px"></div>
     <div id="exList"></div>
     <div style="height:12px"></div>
+    <div id="timerHome"></div>
     <div class="timer" id="timer">
       <div class="tdisp num" id="tDisp">0:00</div>
-      <div class="tbtns">
-        <button data-s="75">75 s</button>
-        <button data-s="120">2 min</button>
-        <button data-s="180">3 min</button>
-        <button data-s="0" class="stop">Stop</button>
+      <div class="tbtns" id="tPresets"></div>
+      <div class="trow">
+        <input type="number" id="tCustom" inputmode="numeric" placeholder="secondes">
+        <button class="tgo" id="tGo">Lancer</button>
+        <button class="tstop" id="tStop">Stop</button>
       </div>
-      <div class="note" style="margin-top:8px">Repos entre séries. <b>2 min sur les ancrages</b>, 75 s sur les accessoires.</div>
+      <div class="note" style="margin-top:8px" id="tNote">Repos entre séries. <b>2 min sur les ancrages</b>, 75 s sur les accessoires.</div>
     </div>
     <div style="height:12px"></div>
+    <div class="addex" id="addExBox">
+      <div class="row" style="margin-bottom:8px">
+        <div style="flex:2"><input type="text" id="axName" placeholder="Nom de l'exercice"></div>
+        <div><input type="text" id="axSets" placeholder="3 x 15"></div>
+      </div>
+      <div class="row">
+        <div><select id="axMus">
+          <option value="Pectoraux">Pectoraux</option><option value="Grand dorsal">Grand dorsal</option>
+          <option value="Bas du dos">Bas du dos</option><option value="Arrière épaules">Arrière épaules</option>
+          <option value="Abdos">Abdos</option><option value="Quadriceps">Quadriceps</option>
+          <option value="Ischios">Ischios</option><option value="Épaules">Épaules</option>
+          <option value="Bras">Bras</option><option value="Mollets">Mollets</option>
+          <option value="Dos épaisseur">Dos épaisseur</option>
+        </select></div>
+        <div style="display:flex;align-items:flex-end"><button class="btn green" id="axAdd">Ajouter</button></div>
+      </div>
+    </div>
+    <button class="btn ghost" id="axToggle">+ Ajouter un exercice à cette séance</button>
+    <div style="height:9px"></div>
     <button class="btn green" id="doneSess">Valider cette séance aujourd'hui</button>
     <div class="note" id="progRule">-</div>
   </div>
@@ -523,6 +614,12 @@ nav button.on svg{stroke:var(--p15)}
 </section>
 
 <section class="panel" id="p-reglages">
+  <div class="card">
+    <div class="eyebrow">Mes jours d'entraînement<span id="daysLbl">-</span></div>
+    <div id="daysCfg"></div>
+    <div class="note">Choisis le jour de chaque séance. Le calendrier et les suggestions s'y adapteront <b>définitivement</b> — tu n'auras plus à les repositionner chaque semaine.</div>
+  </div>
+
   <div class="card">
     <div class="eyebrow">Phase<span id="phaseLbl">-</span></div>
     <div class="seg gold" id="phaseSeg"></div>
@@ -636,8 +733,8 @@ var STORE={get:function(k){try{var v=localStorage.getItem(k);return v===null?(ME
 var KEY='focus_v1';
 var FLOOR=1900, NWEEKS=11;
 
-var DB={cfg:{age:28,h:174,w:79,goal:75,def:400,prot:165,start:'2026-08-10',mod:3,phase:'seche'},
- days:{},weights:[],waist:[],sessions:{},plan:{},loads:{},loadHist:{},saved:[],myfoods:[]};
+var DB={cfg:{age:28,h:174,w:79,goal:75,def:400,prot:165,start:'2026-08-13',mod:3,phase:'seche'},
+ days:{},weights:[],waist:[],sessions:{},plan:{},loads:{},loadHist:{},saved:[],myfoods:[],extraEx:{},exOrder:{}};
 
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function addDays(s,n){var d=new Date(s+'T00:00:00');d.setDate(d.getDate()+n);
@@ -666,7 +763,7 @@ function load(){
         else if(OLDMAP[lk])DB.loads[exKey(OLDMAP[lk])]=p.loads[lk]}
     }catch(e){}}
   }
-  if(!DB.cfg.start)DB.cfg.start='2026-08-10';
+  if(!DB.cfg.start)DB.cfg.start='2026-08-13';
   if(!DB.cfg.mod)DB.cfg.mod=3;
   if(!DB.cfg.goal)DB.cfg.goal=75;
   if(!DB.cfg.phase)DB.cfg.phase='seche';
@@ -674,6 +771,10 @@ function load(){
   if(!DB.plan)DB.plan={};
   if(!DB.loadHist)DB.loadHist={};
   if(!DB.myfoods)DB.myfoods=[];
+  if(!DB.cfg.days)DB.cfg.days=daysDefaut();
+  if(!DB.cfg.trec)DB.cfg.trec=[];
+  if(!DB.extraEx)DB.extraEx={};
+  if(!DB.exOrder)DB.exOrder={};
   for(var d in DB.days){var x=DB.days[d];
     if(x.foods&&!x.meals){x.meals={matin:[],midi:[],soir:[],collation:x.foods};delete x.foods}}
 }
@@ -867,10 +968,11 @@ var SESS={
   ['Tirage bras tendus poulie',['3 x 12','3 x 12','3 x 12'],'Pull-over à la poulie haute, bras quasi tendus. Isole le grand dorsal sans les biceps : l\'exercice qui débloque les lats en retard.',0,'Grand dorsal','Poulie haute + barre droite. Toujours libre, même aux heures pleines.'],
   ['Rowing haltère',['2 x 10','2 x 10','2 x 10'],'Entretien de l\'épaisseur. Volontairement réduit à 2 séries.',0,'Dos épaisseur','Rowing machine assise, ou T-bar.'],
   ['Développé incliné haltères',['3 x 10','3 x 10','3 x 10'],'Rappel pectoraux. Descente en 3 secondes, étirement complet en bas.',0,'Pectoraux','Chest press incliné, ou Smith sur banc inclinable.'],
-  ['Reverse pec-deck',['3 x 15','3 x 15','3 x 15'],'Arrière d\'épaules isolé. Léger, strict, sans élan du dos.',0,'Arrière épaules','Pec-deck inversé, ou oiseau aux poulies basses croisées.'],
+  ['Reverse pec-deck',['3 x 15','3 x 15','3 x 15'],'Superset avec l\'écarté : même machine, tu retournes juste le réglage du siège.',0,'Arrière épaules','Pec-deck inversé, ou oiseau aux poulies basses croisées.',null,'D'],
+  ['Écarté pec-deck',['2 x 15','2 x 15','2 x 15'],'Troisième dose de pectoraux de la semaine. Superset avec le reverse pec-deck : même machine, tu retournes juste le réglage.',0,'Pectoraux','Cable crossover si le pec-deck est pris.',null,'D'],
   ['Extensions lombaires chargées',['2 x 12','2 x 12','2 x 12'],'Disque contre la poitrine. Le bas du dos se muscle, il ne se contente pas de tenir.',0,'Bas du dos','Banc à lombaires à 45 degrés.'],
-  ['Face pull',['2 x 20','2 x 20','2 x 20'],'En superset avec le curl pour gagner du temps.',0,'Arrière épaules','Poulie haute + corde.'],
-  ['Curl marteau',['2 x 12','2 x 12','2 x 12'],'Entretien des bras. 2 séries suffisent chez toi.',0,'Bras','Haltères, ou corde à la poulie basse.'],
+  ['Face pull',['2 x 20','2 x 20','2 x 20'],'Superset avec le curl : tu enchaînes sans repos entre les deux.',0,'Arrière épaules','Poulie haute + corde.',null,'A'],
+  ['Curl marteau',['2 x 12','2 x 12','2 x 12'],'Superset avec le face pull. Repos de 60 s après la paire.',0,'Bras','Haltères, ou corde à la poulie basse.',null,'A'],
   ['Pallof press',['3 x 12 / côté','3 x 12 / côté','3 x 15 / côté'],'Anti-rotation à la poulie. Gainage profond et protection du dos.',0,'Abdos','Poulie réglable à hauteur de poitrine.']]},
 
  SAM:{d:'Samedi',s:'Jambes',p:'jambes',n:'Jambes & chaîne postérieure',mod:3,ex:[
@@ -882,8 +984,8 @@ var SESS={
   ['Presse à cuisses',['3 x 10','3 x 10','3 x 10'],'Les quadriceps travaillent ici les semaines de soulevé, sans charge axiale supplémentaire.',0,'Quadriceps','Presse ou hack squat.','even'],
   ['Fentes bulgares',['2 x 10 / jambe','2 x 8 / jambe','2 x 8 / jambe'],'Unilatéral : corrige les déséquilibres que 5 ans de barre installent.',0,'Quadriceps','Pied arrière sur un banc, haltères en main.'],
   ['Leg curl',['2 x 12','2 x 12','2 x 12'],'Isole les ischios.',0,'Ischios','Leg curl assis ou allongé.'],
-  ['Élévations latérales',['3 x 15','3 x 15','3 x 15'],'Entretien des épaules. La largeur d\'épaules affine la taille.',0,'Épaules','Haltères, ou poulie basse un bras.'],
-  ['Mollets debout',['3 x 15','3 x 15','3 x 15'],'Pause d\'une seconde en bas, amplitude complète.',0,'Mollets','Machine à mollets, ou presse.'],
+  ['Élévations latérales',['3 x 15','3 x 15','3 x 15'],'Superset avec les mollets : deux muscles sans rapport, aucune interférence.',0,'Épaules','Haltères, ou poulie basse un bras.',null,'B'],
+  ['Mollets debout',['3 x 15','3 x 15','3 x 15'],'Superset avec les élévations latérales.',0,'Mollets','Machine à mollets, ou presse.',null,'B'],
   ['Crunch à la poulie',['3 x 12','3 x 12','3 x 15'],'Flexion chargée. Progresse en charge comme sur n\'importe quel muscle.',0,'Abdos','Poulie haute + corde, à genoux.']]},
 
  DIM:{d:'Dimanche',s:'Pecs',p:'poussée',n:'Pectoraux & poussée',mod:3,ex:[
@@ -893,19 +995,19 @@ var SESS={
   ['Développé militaire',['3 x 8','3 x 6','3 x 8'],'Entretien des épaules, debout, gainage strict.',0,'Épaules','Haltères assis, ou machine à épaules.'],
   ['Dips',['2 x 10','2 x 10','2 x 10'],'Buste penché en avant pour cibler le bas des pectoraux.',0,'Pectoraux','Barre à dips, ou machine assistée.'],
   ['Tirage vertical prise large',['2 x 12','2 x 12','2 x 12'],'Rappel grand dorsal. Deuxième dose de largeur dans la semaine.',0,'Grand dorsal','Lat pulldown, sans passer derrière la nuque.'],
-  ['Oiseau à la poulie',['2 x 15','2 x 15','2 x 15'],'Arrière d\'épaules, troisième dose de la semaine.',0,'Arrière épaules','Pec-deck inversé.'],
-  ['Extensions triceps',['2 x 12','2 x 12','2 x 12'],'Entretien des bras.',0,'Bras','Poulie haute + corde.'],
+  ['Oiseau à la poulie',['2 x 15','2 x 15','2 x 15'],'Superset avec les triceps : antagonistes, aucune fatigue partagée.',0,'Arrière épaules','Pec-deck inversé.',null,'C'],
+  ['Extensions triceps',['2 x 12','2 x 12','2 x 12'],'Superset avec l\'oiseau. Repos de 60 s après la paire.',0,'Bras','Poulie haute + corde.',null,'C'],
   ['Gainage lesté',['2 x 40 s','2 x 45 s','2 x 45 s'],'Planche avec disque sur le dos, ou roue abdominale.',0,'Abdos','Aucun matériel requis.']]},
 
  V1:{d:'Full body A',s:'Pecs',p:'poussée',n:'Full body · accent pectoraux',mod:2,ex:[
   ['Développé incliné barre',['4 x 5 · RIR 2','1 x 3 lourde · RIR 1','3 x 4 · RIR 2'],'ANCRAGE. Haut des pectoraux en priorité.',1,'Pectoraux','Smith machine inclinée.'],
   ['Développé couché haltères',['3 x 10','3 x 8','3 x 10'],'Étirement complet en bas.',0,'Pectoraux','Chest press.'],
-  ['Écarté à la poulie',['2 x 15','2 x 15','2 x 15'],'Tension en position étirée.',0,'Pectoraux','Cable crossover ou pec-deck.'],
-  ['Tirage bras tendus poulie',['3 x 12','3 x 12','3 x 12'],'Dose de grand dorsal du jour. Le dos travaille aussi dans cette séance.',0,'Grand dorsal','Poulie haute + barre droite.'],
+  ['Écarté à la poulie',['2 x 15','2 x 15','2 x 15'],'Superset avec le tirage bras tendus : antagonistes, même zone de poulies.',0,'Pectoraux','Cable crossover ou pec-deck.',null,'H'],
+  ['Tirage bras tendus poulie',['3 x 12','3 x 12','3 x 12'],'Superset avec l\'écarté. Dose de grand dorsal du jour.',0,'Grand dorsal','Poulie haute + barre droite.',null,'H'],
   ['Soulevé de terre roumain',['3 x 8','3 x 8','3 x 8'],'Ischios et bas du dos : le volley te donne des quadriceps, pas des ischios.',0,'Ischios','Barre ou haltères.'],
   ['Développé militaire',['2 x 8','2 x 8','2 x 8'],'Utile au service et au smash.',0,'Épaules','Haltères assis.'],
-  ['Reverse pec-deck',['3 x 15','3 x 15','3 x 15'],'Arrière d\'épaules.',0,'Arrière épaules','Pec-deck inversé.'],
-  ['Rotations externes élastique',['2 x 15','2 x 15','2 x 15'],'Coiffe des rotateurs. Non négociable avec 2 volleys par semaine.',0,'Arrière épaules','Élastique, ou poulie basse coude au corps.'],
+  ['Reverse pec-deck',['3 x 15','3 x 15','3 x 15'],'Superset avec les rotations externes : le bloc santé d\'épaule de la séance.',0,'Arrière épaules','Pec-deck inversé.',null,'E'],
+  ['Rotations externes élastique',['2 x 15','2 x 15','2 x 15'],'Superset avec les triceps : coiffe des rotateurs, non négociable avec 2 volleys par semaine.',0,'Arrière épaules','Élastique, ou poulie basse coude au corps.',null,'E'],
   ['Pallof press',['3 x 12 / côté','3 x 12 / côté','3 x 15 / côté'],'Anti-rotation, protection du dos au filet.',0,'Abdos','Poulie réglable.']]},
 
  V2:{d:'Full body B',s:'Dos',p:'tirage',n:'Full body · accent dos',mod:2,ex:[
@@ -915,12 +1017,16 @@ var SESS={
   ['Squat ou presse',['4 x 6 · RIR 3','4 x 5 · RIR 2','3 x 5 · RIR 3'],'Le SEUL mouvement de jambe lourd de la semaine. Le volley fournit déjà les sauts.',0,'Quadriceps','Presse ou hack squat conviennent très bien ici.'],
   ['Extensions lombaires chargées',['3 x 12','3 x 12','3 x 12'],'Bas du dos, point faible prioritaire.',0,'Bas du dos','Banc à lombaires + disque.'],
   ['Développé incliné haltères',['3 x 10','3 x 10','3 x 10'],'Dose de pectoraux du jour. Chaque muscle est touché 2 fois par semaine.',0,'Pectoraux','Chest press incliné.'],
-  ['Face pull',['2 x 20','2 x 20','2 x 20'],'Équilibre les épaules face au volume de smashs.',0,'Arrière épaules','Poulie haute + corde.'],
-  ['Curl marteau',['2 x 12','2 x 12','2 x 12'],'Entretien des bras.',0,'Bras','Haltères ou corde.'],
+  ['Face pull',['2 x 20','2 x 20','2 x 20'],'Superset avec le curl. Équilibre les épaules face au volume de smashs.',0,'Arrière épaules','Poulie haute + corde.',null,'F'],
+  ['Curl marteau',['2 x 12','2 x 12','2 x 12'],'Superset avec le face pull.',0,'Bras','Haltères ou corde.',null,'F'],
   ['Crunch à la poulie',['3 x 12','3 x 12','3 x 15'],'Flexion chargée.',0,'Abdos','Poulie haute + corde.']]}
 };
 var SUGG3={2:'MAR',6:'SAM',0:'DIM'};
 var SUGG2={2:'V1',6:'V2'};
+function planMap(){
+  var d=DB.cfg.days&&DB.cfg.days[DB.cfg.mod===2?'m2':'m3'];
+  if(!d)return DB.cfg.mod===2?SUGG2:SUGG3;
+  var m={};for(var k in d)m[d[k]]=k;return m}
 
 var BLOCS=[
  {n:'Assimilation',w:'S1-2',
@@ -934,15 +1040,59 @@ var BLOCS=[
   rule:'Tu <b>maintiens</b> tes charges du bloc 2 sur moins de séries. C\'est la phase où le tour de taille bouge le plus : surveille-le chaque semaine, il te dira mieux que la balance si tu es sur la bonne voie.'}
 ];
 
-var PHASES={seche:['Sèche','Déficit de 400 kcal, 150 en semaine allégée. Objectif : perdre le gras en gardant la force. C\'est ta phase jusqu\'au '+'25/10/2026'+'.'],
+var PHASES={seche:['Sèche','Déficit de 400 kcal, 150 en semaine allégée. Objectif : perdre le gras en gardant la force. C\'est ta phase jusqu\'au '+fmtD(endDate())+'.'],
  maintien:['Maintien','Aucun déficit ni surplus. Utile pour stabiliser après la sèche, ou pendant une période chargée.'],
  masse:['Prise de masse','Surplus léger de 250 kcal. À ton niveau, monter plus vite ne fait que reprendre du gras. Passe ici après le 25 octobre.']};
 
 var CUR=null,VIEWB=null,PICKDAY=null;
 function sessKeys(){var out=[];for(var k in SESS)if(SESS[k].mod===DB.cfg.mod)out.push(k);return out}
 function suggFor(dateStr){var dow=new Date(dateStr+'T00:00:00').getDay();
-  return DB.cfg.mod===2?(SUGG2[dow]||null):(SUGG3[dow]||null)}
+  return planMap()[dow]||null}
 function setsOf(str){var m=(str||'').match(/^(\d+)/);return m?parseInt(m[1]):0}
+function exList(key,bloc,deload,all){
+  var S=SESS[key],out=[];
+  for(var i=0;i<S.ex.length;i++){
+    var e=S.ex[i];
+    if(!all&&!inWeek(e))continue;
+    var sc=e[1][bloc-1];
+    if(!sc||sc==='-')continue;
+    if(deload){
+      if(/back-off/i.test(e[0]))continue;
+      sc=sc.replace(/^(\d+)/,function(m0){var v=parseInt(m0);return v<=2?v:v-1});
+    }
+    out.push({nom:e[0],sets:sc,tip:e[2],anc:e[3]===1,mus:e[4],alt:e[5],ss:e[7]||null,mine:false});
+  }
+  var mine=(DB.extraEx&&DB.extraEx[key])||[];
+  for(var j=0;j<mine.length;j++)
+    out.push({nom:mine[j].n,sets:mine[j].s,tip:'',anc:false,mus:mine[j].m,alt:'',ss:null,mine:true,idx:j});
+  var ord=DB.exOrder&&DB.exOrder[key];
+  if(ord&&ord.length){
+    var pos={};for(var p=0;p<ord.length;p++)pos[ord[p]]=p;
+    out.sort(function(a,b){
+      var pa=pos[a.nom],pb=pos[b.nom];
+      if(pa===undefined&&pb===undefined)return 0;
+      if(pa===undefined)return 1;
+      if(pb===undefined)return -1;
+      return pa-pb});
+  }
+  return out}
+function stepsOf(L){
+  var out=[];
+  for(var i=0;i<L.length;i++){
+    var o=L[i];
+    if(o.ss&&out.length&&out[out.length-1].ss===o.ss){out[out.length-1].items.push(o);continue}
+    out.push({ss:o.ss||null,items:[o]});
+  }
+  return out}
+function moveEx(key,nom,dir){
+  var L=exList(key,VIEWB||blocOf(progWeek()),isDeload(progWeek()));
+  var names=L.map(function(o){return o.nom}),i=names.indexOf(nom);
+  if(i<0)return;
+  var j=i+dir;
+  if(j<0||j>=names.length)return;
+  names.splice(j,0,names.splice(i,1)[0]);
+  if(!DB.exOrder)DB.exOrder={};
+  DB.exOrder[key]=names;save()}
 function inWeek(e){if(!e[6])return true;return e[6]===(isSquatWeek()?'odd':'even')}
 
 function drawPhase(){
@@ -975,7 +1125,7 @@ function drawMod(){
   var b=$('modSeg').querySelectorAll('button');
   for(var j=0;j<b.length;j++)b[j].onclick=function(){
     DB.cfg.mod=+this.dataset.m;CUR=null;PICKDAY=null;save();
-    drawMod();drawTabs();drawSess();drawWeek();drawVolume();drawJour();
+    drawDaysCfg();drawMod();drawTabs();drawSess();drawWeek();drawVolume();drawJour();
     toast(DB.cfg.mod===2?'Module full body activé':'Module 3 séances activé')};
   $('modLbl').textContent=DB.cfg.mod+' séances / semaine'}
 
@@ -1048,9 +1198,9 @@ function drawPicker(){
 
 function drawVolume(){
   var ks=sessKeys(),b=VIEWB||blocOf(progWeek()),tot={},sum=0;
-  for(var i=0;i<ks.length;i++){var S=SESS[ks[i]];
-    for(var e=0;e<S.ex.length;e++){if(!inWeek(S.ex[e]))continue;
-      var n=setsOf(S.ex[e][1][b-1]),m=S.ex[e][4];
+  for(var i=0;i<ks.length;i++){
+    var L=exList(ks[i],b,false);
+    for(var e=0;e<L.length;e++){var n=setsOf(L[e].sets),m=L[e].mus;
       if(!n)continue;tot[m]=(tot[m]||0)+n;sum+=n}}
   var arr=[];for(var k in tot)arr.push([k,tot[k]]);
   arr.sort(function(a,c){return c[1]-a[1]});
@@ -1064,12 +1214,12 @@ function drawVolume(){
 
 function drawProgress(){
   if(!DB.loadHist)DB.loadHist={};
-  var ks=sessKeys(),seen={},rows=[];
-  for(var i=0;i<ks.length;i++){var S=SESS[ks[i]];
-    for(var e=0;e<S.ex.length;e++){var nm=S.ex[e][0],k=exKey(nm);
+  var ks=sessKeys(),seen={},rows=[],bb=blocOf(progWeek());
+  for(var i=0;i<ks.length;i++){var L4=exList(ks[i],bb,false,true);
+    for(var e=0;e<L4.length;e++){var nm=L4[e].nom,k=exKey(nm);
       if(seen[nm])continue;seen[nm]=1;
       var h=DB.loadHist[k]||[];
-      if(h.length)rows.push({nm:nm,h:h,anc:S.ex[e][3]===1});}}
+      if(h.length)rows.push({nm:nm,h:h,anc:L4[e].anc});}}
   rows.sort(function(a,b){return (b.anc?1:0)-(a.anc?1:0)});
   var h2='';
   if(!rows.length)h2='<div class="empty big">Aucune charge enregistr\u00e9e.<br>Note tes kilos pendant la s\u00e9ance, l\'historique se construira tout seul.</div>';
@@ -1111,49 +1261,50 @@ function drawTabs(){
     h+='<button data-k="'+ks[i]+'"'+(ks[i]===CUR?' class="on"':'')+'>'+S.s+'<i>'+S.d+'</i></button>'}
   $('sessTabs').innerHTML=h;
   var b=$('sessTabs').querySelectorAll('button');
-  for(var j=0;j<b.length;j++)b[j].onclick=function(){CUR=this.dataset.k;drawTabs();drawSess()}}
+  for(var j=0;j<b.length;j++)b[j].onclick=function(){CUR=this.dataset.k;LIVE=null;$('startSess').textContent='Commencer la s\u00e9ance';drawTabs();drawSess();drawLive()}}
 
-function drawSess(){
-  var b=VIEWB||blocOf(progWeek()),S=SESS[CUR],dl=isDeload(progWeek()),h='',num=0;
-  $('sessTitle').textContent=S.d+' — '+S.n+(dl?' · allégée':'');
-  for(var i=0;i<S.ex.length;i++){
-    var e=S.ex[i];
-    if(!inWeek(e))continue;
-    var sets=e[1][b-1];
-    if(!sets||sets==='-')continue;
-    if(dl){
-      if(/back-off/i.test(e[0]))continue;
-      sets=sets.replace(/^(\d+)/,function(m0){var v=parseInt(m0);return v<=2?v:v-1});
-    }
-    num++;
-    var id=exKey(e[0]),v=DB.loads[id]||'',weak=WEAK[e[4]];
-    var hh=(DB.loadHist&&DB.loadHist[id])||[],dl='';
-    if(hh.length>1){
-      var a=parseFloat(String(hh[hh.length-1].v).replace(',','.')),
-          b2=parseFloat(String(hh[hh.length-2].v).replace(',','.'));
-      if(!isNaN(a)&&!isNaN(b2)&&a!==b2)
-        dl='<span class="delta '+(a>b2?'up':'down')+'">'+(a>b2?'+':'')+(Math.round((a-b2)*10)/10)+' kg</span>';
-    }
-    var cls=e[3]===1?' anchor':(weak?' weak':'');
-    h+='<div class="ex'+cls+'"><div class="ex-n">'+String(num).padStart(2,'0')+'</div>'+
-       '<div class="ex-b"><h4>'+e[0]+'</h4><div class="sets">'+sets+'</div>'+
-       '<div class="mus">'+(weak?'<b>'+e[4]+' · priorité</b>':e[4]+' · entretien')+dl+'</div>'+
-       (e[2]?'<div class="tip">'+e[2]+'</div>':'')+
-       (e[5]?'<div class="alt"><b>Si pris :</b> '+e[5]+'</div>':'')+'</div>'+
-       '<div class="ex-load"><input type="text" inputmode="decimal" placeholder="kg" data-id="'+id+'" value="'+v+'"></div></div>'}
-  $('exList').innerHTML=h;
-  var ins=$('exList').querySelectorAll('input');
+function exHTML(o,num){
+  var id=exKey(o.nom),v=DB.loads[id]||'',weak=WEAK[o.mus];
+  var hh=(DB.loadHist&&DB.loadHist[id])||[],dd='';
+  if(hh.length>1){
+    var a=parseFloat(String(hh[hh.length-1].v).replace(',','.')),
+        b2=parseFloat(String(hh[hh.length-2].v).replace(',','.'));
+    if(!isNaN(a)&&!isNaN(b2)&&a!==b2)
+      dd='<span class="delta '+(a>b2?'up':'down')+'">'+(a>b2?'+':'')+(Math.round((a-b2)*10)/10)+' kg</span>';
+  }
+  var cls=o.anc?' anchor':(weak?' weak':'');
+  if(o.mine)cls+=' mine';
+  return '<div class="ex'+cls+'"><div class="ex-n">'+String(num).padStart(2,'0')+'</div>'+
+    '<div class="ex-b"><h4>'+o.nom+(o.ss?'<span class="ss">SS '+o.ss+'</span>':'')+'</h4>'+
+    '<div class="sets">'+o.sets+'</div>'+
+    '<div class="mus">'+(weak?'<b>'+o.mus+' \u00b7 priorit\u00e9</b>':o.mus+(o.mine?' \u00b7 ajout\u00e9':' \u00b7 entretien'))+dd+'</div>'+
+    (o.tip?'<div class="tip">'+o.tip+'</div>':'')+
+    (o.alt?'<div class="alt"><b>Si pris :</b> '+o.alt+'</div>':'')+'</div>'+
+    '<div class="ex-load"><input type="text" inputmode="decimal" placeholder="kg" data-id="'+id+'" value="'+v+'"></div>'+
+    (o.mine?'<button class="exdel" data-i="'+o.idx+'" aria-label="Retirer">&times;</button>':'')+'</div>'}
+function bindLoads(root){
+  var ins=root.querySelectorAll('input[data-id]');
   for(var j=0;j<ins.length;j++)ins[j].onchange=function(){
     var k=this.dataset.id,v=(this.value||'').trim();
     DB.loads[k]=v;
     if(v){
       if(!DB.loadHist)DB.loadHist={};
+      var jd=curDay();
       var h=DB.loadHist[k]=DB.loadHist[k]||[],last=h[h.length-1];
-      if(last&&last.d===today())last.v=v;
-      else if(!last||last.v!==v)h.push({d:today(),v:v});
+      if(last&&last.d===jd)last.v=v;
+      else if(!last||last.v!==v)h.push({d:jd,v:v});
     }
-    save();drawSess();drawProgress()}}
-
+    save();drawProgress()}}
+function drawSess(){
+  var b=VIEWB||blocOf(progWeek()),S=SESS[CUR],dload=isDeload(progWeek());
+  $('sessTitle').textContent=S.d+' \u2014 '+S.n+(dload?' \u00b7 all\u00e9g\u00e9e':'');
+  var L=exList(CUR,b,dload),h='';
+  for(var i=0;i<L.length;i++)h+=exHTML(L[i],i+1);
+  $('exList').innerHTML=h;
+  bindLoads($('exList'));
+  var dels=$('exList').querySelectorAll('.exdel');
+  for(var d2=0;d2<dels.length;d2++)dels[d2].onclick=function(){
+    DB.extraEx[CUR].splice(+this.dataset.i,1);save();drawSess();drawVolume();toast('Exercice retir\u00e9')}}
 function drawJour(){
   var x=day(curDay()),T=totals(),B=budget(),left=B-T.k,pct=B?Math.min(100,T.k/B*100):0;
   $('kcalLeft').innerHTML=(left<0?'+'+Math.abs(left):left)+'<small>'+(left<0?'kcal au-dessus':'kcal restantes')+'</small>';
@@ -1178,7 +1329,7 @@ function drawJour(){
   $('protBar').style.width=Math.min(100,T.p/pg*100)+'%';
   $('protBar').style.background=T.p>=pg?'var(--p10)':'var(--p20)';
   $('sBase').textContent=base();$('sSteps').textContent=stepKcal(x.steps);
-  $('sSport').textContent=sportKcal(x.met,x.min);$('sTot').textContent=spent(x);
+  $('sSport').textContent=Math.round(sportKcal(x.met,x.min)*0.5);$('sTot').textContent=credited(x);
   if(document.activeElement!==$('steps'))$('steps').value=x.steps||'';
   if(document.activeElement!==$('actMin'))$('actMin').value=x.min||'';
   $('actType').value=x.met||0;
@@ -1206,7 +1357,7 @@ function drawJour(){
 
 var ACTNAME={'5':'Muscu salle','8':'HIIT maison','6.3':'Volley','7.5':'Rameur / vélo','4.3':'Marche rapide'};
 function daySummary(d){
-  d=d||today();var x=day(d),T=dayTot(x),S=spent(x),bal=S-T.k,w=progWeek(),L=[];
+  d=d||today();var x=day(d),T=dayTot(x),S=spent(x),C=credited(x),bal=C-T.k,w=progWeek(),L=[];
   L.push('JOURNEE DU '+fmtD(d)+'  ·  S'+w+'/'+NWEEKS+' · Bloc '+blocOf(w)+' ('+BLOCS[blocOf(w)-1].n+')'+(isDeload(w)?' · allégée':''));
   L.push('Phase : '+PHASES[DB.cfg.phase][0]+'  |  Module : '+DB.cfg.mod+' séances/sem  |  Ancrage samedi : '+(isSquatWeek()?'squat':'soulevé de terre'));
   var lw=DB.weights.length?DB.weights[DB.weights.length-1]:null;
@@ -1215,8 +1366,8 @@ function daySummary(d){
   L.push('ENERGIE');
   L.push('  Ingéré   : '+T.k+' kcal · '+T.p+' g protéines  (objectif '+DB.cfg.prot+' g)');
   L.push('  Plafond  : '+budgetFor(x)+' kcal   [plancher '+FLOOR+']');
-  L.push('  Dépensé  : '+S+' kcal (base '+base()+' + pas '+stepKcal(x.steps)+' + séance '+sportKcal(x.met,x.min)+')');
-  L.push('  Balance  : '+(bal>=0?'déficit ':'surplus ')+Math.abs(bal)+' kcal');
+  L.push('  Dépensé  : '+C+' kcal retenus (base '+base()+' + pas '+stepKcal(x.steps)+' + séance '+Math.round(sportKcal(x.met,x.min)*0.5)+' sur '+sportKcal(x.met,x.min)+')');
+  L.push('  Balance  : '+(bal>=0?'déficit ':'surplus ')+Math.abs(bal)+' kcal   [cible '+defNow()+']');
   L.push('  Pas      : '+(x.steps||0)+'  (objectif '+stepTarget()+')');
   L.push('');
   L.push('REPAS');
@@ -1226,12 +1377,10 @@ function daySummary(d){
     L.push('  '+MEALS[i][1]+' ('+Math.round(k)+' kcal / '+Math.round(p)+' g P) : '+nm.join(', '))}
   L.push('');
   var s=DB.sessions[d],b=blocOf(w);
-  if(s&&SESS[s]){var P=SESS[s];
+  if(s&&SESS[s]){var P=SESS[s],EL=exList(s,b,isDeload(w));
     L.push('SEANCE — '+P.n+(x.min?' · '+x.min+' min':''));
-    for(var e=0;e<P.ex.length;e++){if(!inWeek(P.ex[e]))continue;
-      var sc=P.ex[e][1][b-1];if(!sc||sc==='-')continue;
-      var v=DB.loads[exKey(P.ex[e][0])];
-      L.push('  '+P.ex[e][0]+' — '+sc+(v?' @ '+v+' kg':'')+'   ['+P.ex[e][4]+']')}}
+    for(var e=0;e<EL.length;e++){var v=DB.loads[exKey(EL[e].nom)];
+      L.push('  '+EL[e].nom+' — '+EL[e].sets+(v?' @ '+v+' kg':'')+'   ['+EL[e].mus+']'+(EL[e].ss?' [SS '+EL[e].ss+']':''))}}
   else if(x.met)L.push('ACTIVITE : '+(ACTNAME[String(x.met)]||'séance')+' · '+x.min+' min');
   else L.push('SEANCE : repos');
   L.push('');
@@ -1244,7 +1393,8 @@ function dayKeys(n){var out=[],d=today();
   for(var i=n-1;i>=0;i--)out.push(addDays(d,-i));return out}
 function dayBalance(k){var x=DB.days[k];if(!x)return null;
   var T=dayTot(x);if(T.k===0)return null;
-  return{k:k,in:T.k,prot:T.p,steps:x.steps||0,met:x.met||0,min:x.min||0,spent:spent(x),bal:spent(x)-T.k}}
+  return{k:k,in:T.k,prot:T.p,steps:x.steps||0,met:x.met||0,min:x.min||0,
+    spent:spent(x),cred:credited(x),bal:credited(x)-T.k}}
 function drawRange(){var h='',r=[[7,'7 jours'],[14,'14 jours'],[30,'30 jours']];
   for(var i=0;i<r.length;i++)h+='<button data-n="'+r[i][0]+'"'+(r[i][0]===RANGE?' class="on"':'')+'>'+r[i][1]+'</button>';
   $('range').innerHTML=h;
@@ -1399,9 +1549,9 @@ function exportTxt(){
   l.push('');
   l.push('CHARGES PAR EXERCICE');
   var any=false,ks=sessKeys(),seen={};
-  for(var m=0;m<ks.length;m++){var S=SESS[ks[m]];
-    for(var e=0;e<S.ex.length;e++){var nm=S.ex[e][0],v=DB.loads[exKey(nm)];
-      if(v&&!seen[nm]){seen[nm]=1;l.push('  '+nm+' : '+v+' kg   ['+S.ex[e][4]+']');any=true}}}
+  for(var m=0;m<ks.length;m++){var L2=exList(ks[m],b,false,true);
+    for(var e=0;e<L2.length;e++){var nm=L2[e].nom,v=DB.loads[exKey(nm)];
+      if(v&&!seen[nm]){seen[nm]=1;l.push('  '+nm+' : '+v+' kg   ['+L2[e].mus+']');any=true}}}
   if(!any)l.push('  (aucune)');
   l.push('');
   l.push('SEANCES VALIDEES');
@@ -1416,7 +1566,8 @@ function exportTxt(){
   l.push('PROGRESSION DES CHARGES');
   var pk=Object.keys(DB.loadHist||{}),pany=false;
   var nameOf={};var sk2=sessKeys();
-  for(var a=0;a<sk2.length;a++)for(var b3=0;b3<SESS[sk2[a]].ex.length;b3++)nameOf[exKey(SESS[sk2[a]].ex[b3][0])]=SESS[sk2[a]].ex[b3][0];
+  for(var a=0;a<sk2.length;a++){var L3=exList(sk2[a],b,false,true);
+    for(var b3=0;b3<L3.length;b3++)nameOf[exKey(L3[b3].nom)]=L3[b3].nom;}
   for(var c=0;c<pk.length;c++){var hh=DB.loadHist[pk[c]];
     if(hh&&hh.length&&nameOf[pk[c]]){pany=true;
       var str=[];for(var q2=Math.max(0,hh.length-6);q2<hh.length;q2++)str.push(fmtD(hh[q2].d)+':'+hh[q2].v);
@@ -1481,9 +1632,11 @@ $('saveWaist').onclick=function(){
   DB.waist.sort(function(a,b){return a.d<b.d?-1:1});
   save();drawWaist();$('waistIn').value='';toast('Mesure enregistrée')};
 $('doneSess').onclick=function(){
-  DB.sessions[today()]=CUR;delete DB.plan[today()];
-  var x=day();if(!x.met){x.met=5;x.min=70}
-  save();drawWeek();drawJour();drawBilan();toast(SESS[CUR].n+' validée')};
+  var jd=curDay();
+  DB.sessions[jd]=CUR;delete DB.plan[jd];
+  var x=day(jd);if(!x.met){x.met=5;x.min=70}
+  save();drawWeek();drawJour();drawBilan();
+  toast(SESS[CUR].n+' validée'+(jd!==today()?' le '+fmtD(jd):''))};
 $('saveCfg').onclick=function(){
   DB.cfg.age=parseInt($('cfgAge').value)||28;DB.cfg.h=parseInt($('cfgH').value)||174;
   DB.cfg.w=parseFloat(($('cfgW').value||'').replace(',','.'))||79;
@@ -1569,27 +1722,80 @@ function drawUndo(){
   if(u)$('undoNote').innerHTML='Retour \u00e0 l\'\u00e9tat pr\u00e9c\u00e9dant : <b>'+u.t+'</b> ('+u.d+'). Un seul retour en arri\u00e8re est conserv\u00e9.'}
 $('undoBtn').onclick=function(){doUndo()};
 var TMR=null,TEND=0;
+var TBASE=[60,75,120,180];
+function tRecents(){return (DB.cfg&&DB.cfg.trec)||[]}
+function tPush(sec){
+  if(!DB.cfg.trec)DB.cfg.trec=[];
+  if(TBASE.indexOf(sec)>-1)return;
+  var a=DB.cfg.trec, i=a.indexOf(sec);
+  if(i>-1)a.splice(i,1);
+  a.unshift(sec);
+  while(a.length>3)a.pop();        // on ne garde que les 3 plus récents
+  save();drawPresets()}
+function tLabel(s){return s%60===0?(s/60)+' min':(s<60?s+' s':Math.floor(s/60)+'m'+String(s%60).padStart(2,'0'))}
+function drawPresets(){
+  var h='',r=tRecents();
+  for(var i=0;i<TBASE.length;i++)h+='<button data-s="'+TBASE[i]+'">'+tLabel(TBASE[i])+'</button>';
+  for(var j=0;j<r.length;j++)h+='<button class="recent" data-s="'+r[j]+'">'+tLabel(r[j])+'</button>';
+  $('tPresets').innerHTML=h;
+  var b=$('tPresets').querySelectorAll('button');
+  for(var k=0;k<b.length;k++)b[k].onclick=function(){startTimer(+this.dataset.s)}}
+var ACTX=null;
+function beep(){
+  try{
+    if(!ACTX)ACTX=new (window.AudioContext||window.webkitAudioContext)();
+    if(ACTX.state==='suspended')ACTX.resume();
+    for(var n=0;n<3;n++){
+      var o=ACTX.createOscillator(),g=ACTX.createGain(),t0=ACTX.currentTime+n*0.28;
+      o.type='sine';o.frequency.value=880;
+      g.gain.setValueAtTime(0.0001,t0);
+      g.gain.exponentialRampToValueAtTime(0.35,t0+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t0+0.22);
+      o.connect(g);g.connect(ACTX.destination);o.start(t0);o.stop(t0+0.25);
+    }
+  }catch(e){}
+}
+function notifyEnd(){
+  beep();
+  try{if(navigator.vibrate)navigator.vibrate([200,100,200])}catch(e){}
+  try{
+    if(typeof Notification!=='undefined'&&Notification.permission==='granted')
+      new Notification('Focus',{body:'Repos terminé — série suivante',tag:'focus-rest'});
+  }catch(e){}
+}
+function askNotif(){
+  try{
+    if(typeof Notification!=='undefined'&&Notification.permission==='default')
+      Notification.requestPermission();
+  }catch(e){}
+}
 function fmtT(sec){var m=Math.floor(Math.abs(sec)/60),x=Math.abs(sec)%60;
   return (sec<0?'-':'')+m+':'+String(x).padStart(2,'0')}
 function tickTimer(){
   var left=Math.round((TEND-Date.now())/1000);
   $('tDisp').textContent=fmtT(left);
   var t=$('timer');
-  if(left<=0){t.classList.remove('run');t.classList.add('done');
-    if(left<=-1){stopTimer();$('tDisp').textContent='0:00';toast('Repos termin\u00e9')}}
+  if(left<=0){
+    if(!t.classList.contains('done')){t.classList.remove('run');t.classList.add('done');notifyEnd()}
+    if(left<=-2){stopTimer();$('tDisp').textContent='0:00';toast('Repos termin\u00e9')}}
 }
 function stopTimer(){if(TMR){clearInterval(TMR);TMR=null}
   var t=$('timer');t.classList.remove('run');t.classList.remove('done')}
 function startTimer(sec){
   stopTimer();
   if(!sec){$('tDisp').textContent='0:00';return}
+  askNotif();
+  try{if(ACTX&&ACTX.state==='suspended')ACTX.resume()}catch(e){}
   TEND=Date.now()+sec*1000;
   $('timer').classList.add('run');
   tickTimer();TMR=setInterval(tickTimer,250)}
-(function(){var b=$('timer').querySelectorAll?[]:[];})();
 function bindTimer(){
-  var b=document.getElementById('timer').querySelectorAll('button');
-  for(var i=0;i<b.length;i++)b[i].onclick=function(){startTimer(+this.dataset.s)}}
+  drawPresets();
+  $('tGo').onclick=function(){
+    var v=parseInt($('tCustom').value);
+    if(!v||v<5||v>900){toast('Entre 5 et 900 secondes');return}
+    tPush(v);startTimer(v);$('tCustom').value=''};
+  $('tStop').onclick=function(){startTimer(0)}}
 var DUPARM=false;
 function prevDayKey(){return addDays(curDay(),-1)}
 function drawDup(){
@@ -1654,6 +1860,148 @@ function foldInit(){
     }
     applyFold();
   }catch(e){}}
+var JOURS=[['L',1],['M',2],['M',3],['J',4],['V',5],['S',6],['D',0]];
+function daysDefaut(){return {m3:{MAR:2,SAM:6,DIM:0},m2:{V1:2,V2:6}}}
+function daysCur(){
+  if(!DB.cfg.days)DB.cfg.days=daysDefaut();
+  var k=DB.cfg.mod===2?'m2':'m3';
+  if(!DB.cfg.days[k])DB.cfg.days[k]=daysDefaut()[k];
+  return DB.cfg.days[k]}
+function drawDaysCfg(){
+  var cur=daysCur(),ks=sessKeys(),h='';
+  for(var i=0;i<ks.length;i++){
+    var S=SESS[ks[i]],sel=cur[ks[i]];
+    h+='<div class="dayrowcfg"><div class="dl">'+S.s+'<i>'+S.n+'</i></div><div class="dpick">';
+    for(var j=0;j<JOURS.length;j++)
+      h+='<button data-k="'+ks[i]+'" data-d="'+JOURS[j][1]+'"'+(sel===JOURS[j][1]?' class="on"':'')+'>'+JOURS[j][0]+'</button>';
+    h+='</div></div>';
+  }
+  $('daysCfg').innerHTML=h;
+  var b=$('daysCfg').querySelectorAll('button');
+  for(var q=0;q<b.length;q++)b[q].onclick=function(){
+    var k=this.dataset.k,d=+this.dataset.d,cur=daysCur();
+    for(var o in cur)if(cur[o]===d&&o!==k)delete cur[o];   // un seul entraînement par jour
+    cur[k]=d;save();drawDaysCfg();drawWeek();drawTabs();drawSess();
+    toast(SESS[k].s+' placée le '+['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'][d])};
+  var noms=[],cur2=daysCur();
+  for(var z=0;z<ks.length;z++)if(cur2[ks[z]]!==undefined)
+    noms.push(['D','L','Ma','Me','J','V','S'][cur2[ks[z]]]);
+  $('daysLbl').textContent=noms.join(' · ')}
+$('axToggle').onclick=function(){
+  var b=$('addExBox');b.classList.toggle('on');
+  $('axToggle').textContent=b.classList.contains('on')?'Annuler':'+ Ajouter un exercice à cette séance'};
+$('axAdd').onclick=function(){
+  var n=($('axName').value||'').trim(),st=($('axSets').value||'').trim(),m=$('axMus').value;
+  if(!n){toast('Donne un nom');return}
+  if(!/^\d+\s*x\s*\d+/i.test(st)){toast('Format attendu : 3 x 12');return}
+  if(!DB.extraEx)DB.extraEx={};
+  if(!DB.extraEx[CUR])DB.extraEx[CUR]=[];
+  DB.extraEx[CUR].push({n:n,s:st,m:m});
+  save();drawSess();drawVolume();
+  $('axName').value='';$('axSets').value='';
+  $('addExBox').classList.remove('on');
+  $('axToggle').textContent='+ Ajouter un exercice à cette séance';
+  toast(n+' ajouté')};
+var LIVE=null,LISTOPEN=false;
+function liveList(){return exList(CUR,VIEWB||blocOf(progWeek()),isDeload(progWeek()))}
+function liveSteps(){return stepsOf(liveList())}
+function restFor(st){
+  if(st.ss)return 90;
+  var o=st.items[0];
+  if(o.anc)return 150;
+  if(/back-off/i.test(o.nom))return 120;
+  if(o.mus==='Abdos')return 45;
+  return 75}
+function moveTimer(inLive){
+  try{
+    var t=$('timer'),slot=inLive?$('liveTimerSlot'):$('timerHome');
+    if(t&&slot&&t.parentNode!==slot)slot.appendChild(t);
+  }catch(e){}}
+function itemHTML(o){
+  var id=exKey(o.nom),v=DB.loads[id]||'',weak=WEAK[o.mus];
+  return '<div class="litem">'+
+    '<h3>'+o.nom+'</h3>'+
+    '<div class="lsets">'+o.sets+'</div>'+
+    '<div class="lmus">'+(weak?'<b>'+o.mus+' \u00b7 priorit\u00e9</b>':o.mus)+(o.anc?' \u00b7 ancrage':'')+'</div>'+
+    (o.tip?'<div class="ltip">'+o.tip+'</div>':'')+
+    (o.alt?'<div class="lalt"><b>Si pris :</b> '+o.alt+'</div>':'')+
+    '<div class="lload"><label>Charge</label>'+
+    '<input type="text" inputmode="decimal" placeholder="kg" data-id="'+id+'" value="'+v+'"></div></div>'}
+function drawLiveList(){
+  if(!LISTOPEN){$('liveAll').innerHTML='';return}
+  var ST=liveSteps(),h='<div class="lallhead">Touche un exercice pour y aller \u00b7 fl\u00e8ches pour le d\u00e9placer</div>';
+  var n=0;
+  for(var i=0;i<ST.length;i++){
+    var st=ST[i],cur=(i===LIVE);
+    var noms=st.items.map(function(o){return o.nom}).join(' + ');
+    var sets=st.items.map(function(o){return o.sets}).join(' / ');
+    n++;
+    h+='<div class="lrow'+(cur?' now':'')+'">'+
+       '<button class="lgo" data-i="'+i+'"><span class="ln">'+String(n).padStart(2,'0')+'</span>'+
+       '<span class="lt">'+noms+(st.ss?'<span class="ss">SS '+st.ss+'</span>':'')+'<i>'+sets+'</i></span></button>'+
+       '<button class="lmv" data-n="'+st.items[0].nom+'" data-d="-1">\u25b2</button>'+
+       '<button class="lmv" data-n="'+st.items[st.items.length-1].nom+'" data-d="1">\u25bc</button></div>';
+  }
+  $('liveAll').innerHTML=h;
+  var gos=$('liveAll').querySelectorAll('.lgo');
+  for(var g=0;g<gos.length;g++)gos[g].onclick=function(){
+    LIVE=+this.dataset.i;LISTOPEN=false;drawLive();startTimer(0);
+    try{$('liveCard').scrollIntoView({block:'start',behavior:'smooth'})}catch(e){}};
+  var mvs=$('liveAll').querySelectorAll('.lmv');
+  for(var m=0;m<mvs.length;m++)mvs[m].onclick=function(){
+    moveEx(CUR,this.dataset.n,+this.dataset.d);drawSess();drawLive();toast('Exercice d\u00e9plac\u00e9')}}
+function drawLive(){
+  var card=$('liveCard');
+  if(LIVE===null){card.style.display='none';moveTimer(false);
+    $('exList').style.display='';$('axToggle').style.display='';$('doneSess').style.display='';return}
+  $('exList').style.display='none';$('axToggle').style.display='none';$('doneSess').style.display='none';
+  moveTimer(true);
+  var ST=liveSteps();
+  if(!ST.length||LIVE>=ST.length){LIVE=null;card.style.display='none';moveTimer(false);
+    $('exList').style.display='';$('axToggle').style.display='';$('doneSess').style.display='';return}
+  var st=ST[LIVE];
+  card.style.display='block';
+  $('liveProg').textContent=(LIVE+1)+' / '+ST.length;
+  $('liveFill').style.width=((LIVE+1)/ST.length*100)+'%';
+  var h='';
+  if(st.ss)h+='<div class="lsshead">Superset '+st.ss+' \u00b7 encha\u00eene les '+st.items.length+' exercices sans repos entre eux</div>';
+  for(var k=0;k<st.items.length;k++)h+=itemHTML(st.items[k]);
+  $('liveMain').innerHTML=h;
+  bindLoads($('liveMain'));
+  $('livePrev').style.visibility=LIVE>0?'visible':'hidden';
+  $('liveNext').textContent=(LIVE===ST.length-1)?'Terminer':'Suivant';
+  var nx=ST[LIVE+1];
+  $('liveAfter').innerHTML=nx?('Ensuite : <b>'+nx.items.map(function(o){return o.nom}).join(' + ')+'</b>'):'Dernier exercice de la s\u00e9ance.';
+  $('liveRest').textContent='S\u00e9rie suivante \u2014 repos '+restFor(st)+' s';
+  $('liveToggle').textContent=LISTOPEN?'Masquer la liste':'Voir tous les exercices';
+  drawLiveList()}
+function liveGo(n){
+  var ST=liveSteps();
+  if(n===null||n===undefined||isNaN(n)||n<0)return;
+  if(n>=ST.length){
+    LIVE=null;LISTOPEN=false;drawLive();
+    $('startSess').textContent='Commencer la s\u00e9ance';
+    var jd=curDay();
+    DB.sessions[jd]=CUR;delete DB.plan[jd];
+    var x=day(jd);if(!x.met){x.met=5;x.min=70}
+    startTimer(0);save();drawWeek();drawJour();drawBilan();
+    toast('S\u00e9ance termin\u00e9e et valid\u00e9e');
+    return}
+  LIVE=n;LISTOPEN=false;drawLive();startTimer(0);
+  try{$('liveCard').scrollIntoView({block:'start',behavior:'smooth'})}catch(e){}
+}
+$('startSess').onclick=function(){
+  if(LIVE===null){
+    if(!liveSteps().length){toast('Aucun exercice');return}
+    LIVE=0;LISTOPEN=false;drawLive();$('startSess').textContent='Quitter le mode s\u00e9ance';
+    try{$('liveCard').scrollIntoView({block:'start',behavior:'smooth'})}catch(e){}}
+  else{LIVE=null;LISTOPEN=false;startTimer(0);drawLive();$('startSess').textContent='Commencer la s\u00e9ance'}};
+$('liveToggle').onclick=function(){LISTOPEN=!LISTOPEN;drawLive()};
+$('liveRest').onclick=function(){
+  var ST=liveSteps(); if(LIVE===null||!ST[LIVE])return;
+  startTimer(restFor(ST[LIVE]))};
+$('livePrev').onclick=function(){if(LIVE!==null&&LIVE>0)liveGo(LIVE-1)};
+$('liveNext').onclick=function(){if(LIVE!==null)liveGo(LIVE+1)};
 function drawStore(){
   $('storeCard').style.display=STORAGE_OK?'none':'block';
   $('topBadge').style.display=STORAGE_OK?'none':'block';
@@ -1668,7 +2016,7 @@ $('quickRestore').onclick=function(){
   var b=$('ioBox');b.style.display='block';b.value='';
   b.placeholder='Colle ici ta sauvegarde puis appuie sur Restaurer une sauvegarde (Réglages)';
   toast('Ouvre Réglages pour coller ta sauvegarde')};
-function redraw(){bindTimer();drawUndo();drawStore();drawDayNav();drawProgress();drawMyFoods();drawSeg();drawSaved();drawHand();drawJour();drawRange();drawBilan();drawPoids();drawWaist();
+function redraw(){bindTimer();drawUndo();drawStore();drawDaysCfg();drawLive();drawDayNav();drawProgress();drawMyFoods();drawSeg();drawSaved();drawHand();drawJour();drawRange();drawBilan();drawPoids();drawWaist();
  drawMod();drawProg();drawTabs();drawSess();drawVolume();drawWeek();drawPicker();drawPhase();drawCaps();drawCfg()}
 load();redraw();foldInit();
 if(day(curDay()).closed){$('sumBox').textContent=daySummary(curDay());$('sumWrap').style.display='block'}
