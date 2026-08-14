@@ -76,6 +76,24 @@ h1,h2,h3,h4{font-family:'Chivo',sans-serif;margin:0;letter-spacing:-.02em}
  font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:var(--brume)}
 .calc b{color:var(--craie);font-weight:600}
 .calc .eq{color:var(--p15);font-weight:600}
+.actchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.actchips .ac{display:inline-flex;align-items:center;gap:6px;background:var(--fonte-2);border:1px solid var(--trait);
+ border-radius:99px;padding:6px 11px;font-size:12px}
+.actchips .ac b{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11.5px}
+.actchips .ac.pas{border-color:rgba(43,191,140,.5)}
+.actchips .ac.pas b{color:var(--p10)}
+.actchips .ac.gym{border-color:rgba(92,156,236,.55)}
+.actchips .ac.gym b{color:var(--p20)}
+.actchips .ac.spo{border-color:rgba(167,139,250,.5)}
+.actchips .ac.spo b{color:var(--p35)}
+.actchips .ac.vide{color:var(--brume);border-style:dashed}
+.gymline{display:flex;align-items:center;gap:9px;padding:9px 0;border-top:1px solid var(--trait);
+ border-bottom:1px solid var(--trait);font-size:13px;margin-top:12px}
+.gymline .gi{flex:none;width:16px;text-align:center;color:var(--brume);font-size:12px}
+.gymline.on .gi{color:var(--p20)}
+.gymline .gt{flex:1;min-width:0;color:var(--brume);line-height:1.35}
+.gymline.on .gt{color:var(--craie)}
+.gymline .gk{flex:none;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:600;color:var(--p20)}
 .gauge-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px}
 .gauge-track{height:7px;border-radius:99px;background:var(--fonte-2);overflow:hidden}
 .gauge-fill{height:100%;width:0;border-radius:99px;transition:width .5s cubic-bezier(.2,.7,.3,1)}
@@ -126,6 +144,9 @@ textarea{resize:vertical;min-height:70px;line-height:1.45}
 .empty.big{text-align:center;padding:16px 0}
 .savebar{background:var(--fonte-2);border:1px solid rgba(74,144,232,.5);border-radius:10px;padding:11px;margin-top:11px;display:none}
 .savebar.on{display:block}
+.chk{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:13px;color:var(--brume);user-select:none;-webkit-user-select:none}
+.chk input{width:19px;height:19px;flex:none;accent-color:var(--p10);margin:0}
+.chk span{line-height:1.35}
 .chart{width:100%;display:block}
 .chart-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:var(--brume);margin-top:8px}
 .chart-legend span{display:flex;align-items:center;gap:6px}
@@ -351,6 +372,7 @@ nav button.on svg{stroke:var(--p15)}
     </div>
     <div class="bar-track"><div class="bar-load" id="barLoad"></div><div class="bar-floor" id="barFloor"></div></div>
     <div class="bar-marks"><span>0</span><span id="barFloorLbl">plancher 1 900</span><span id="barEnd">-</span></div>
+    <div class="actchips" id="actChips"></div>
     <div class="calc" id="calcLine"></div>
     <div class="hr"></div>
     <div class="gauge-top"><b>Protéines</b><span class="num"><span id="protIn">0</span> / <span id="protGoal">165</span> g</span></div>
@@ -367,19 +389,19 @@ nav button.on svg{stroke:var(--p15)}
     <label class="fld">Méthode de la main</label>
     <div class="chips" id="handChips"></div>
     <div style="height:14px"></div>
-    <label class="fld" for="foodTxt">Ou décris le repas</label>
-    <textarea id="foodTxt" placeholder="180 poulet, 150 riz, brocoli, 1 yaourt grec"></textarea>
+    <label class="fld" for="fNom">Saisie manuelle</label>
+    <input type="text" id="fNom" placeholder="Nom du plat — ex : Poulet riz brocoli">
+    <div style="height:9px"></div>
+    <div class="row">
+      <div><input type="number" id="fG" inputmode="numeric" placeholder="grammes"></div>
+      <div><input type="number" id="fK" inputmode="numeric" placeholder="kcal"></div>
+      <div><input type="number" id="fP" inputmode="decimal" step="0.1" placeholder="prot. g"></div>
+    </div>
+    <div style="height:10px"></div>
+    <label class="chk" id="fSaveLbl"><input type="checkbox" id="fSave"><span>Enregistrer ce plat pour la prochaine fois</span></label>
     <div style="height:10px"></div>
     <button class="btn" id="addFood">Ajouter au repas</button>
-    <div class="savebar" id="savebar">
-      <label class="fld" for="saveName">Enregistrer ce plat pour la prochaine fois ?</label>
-      <input type="text" id="saveName" placeholder="Ex : Poulet riz brocoli">
-      <div style="height:9px"></div>
-      <div class="row">
-        <button class="btn green sm" id="doSave" style="width:100%">Enregistrer</button>
-        <button class="btn ghost sm" id="noSave" style="width:100%">Non merci</button>
-      </div>
-    </div>
+    <div class="note">Les grammes sont facultatifs — ils servent uniquement à pouvoir ajuster la quantité ensuite. <b>Seules les kcal et les protéines comptent</b> dans ton bilan.</div>
   </div>
 
   <div class="card">
@@ -392,20 +414,32 @@ nav button.on svg{stroke:var(--p15)}
 
   <div class="card">
     <div class="eyebrow">Dépense</div>
-    <div class="row" style="margin-bottom:11px">
-      <div><label class="fld" for="steps">Pas du jour</label><input type="number" id="steps" inputmode="numeric" placeholder="8000"></div>
-      <div><label class="fld" for="actType">Activité</label>
-        <select id="actType"><option value="0">Aucune</option><option value="5">Muscu salle</option><option value="6.3">Volley</option>
-        <option value="7.5">Rameur / vélo</option><option value="8">HIIT maison</option><option value="4.3">Marche rapide</option></select></div>
+    <div style="margin-bottom:12px">
+      <label class="fld" for="steps">Pas du jour</label>
+      <input type="number" id="steps" inputmode="numeric" placeholder="8000">
     </div>
-    <div class="row" style="margin-bottom:11px">
-      <div><label class="fld" for="actMin">Durée (min)</label><input type="number" id="actMin" inputmode="numeric" placeholder="70"></div>
-      <div style="display:flex;align-items:flex-end"><button class="btn green" id="saveAct">Enregistrer</button></div>
+
+    <div class="gymline" id="gymRow">
+      <span class="gi" id="gymIcon">—</span>
+      <span class="gt" id="gymState">Aucune séance validée</span>
+      <span class="gk" id="gymKcalTxt"></span>
     </div>
+
+    <label class="fld" style="margin-top:14px">Autre activité</label>
+    <div class="row" style="margin-bottom:11px">
+      <div><select id="actType">
+        <option value="0">Aucune</option><option value="6.3">Volley</option><option value="8.3">Natation</option>
+        <option value="7.3">Tennis / padel</option><option value="6">Randonnée</option><option value="7.5">Vélo</option>
+        <option value="9.8">Course à pied</option><option value="8">HIIT maison</option><option value="4.3">Marche rapide</option>
+        <option value="5.5">Football</option><option value="6.5">Basket</option>
+      </select></div>
+      <div><input type="number" id="actMin" inputmode="numeric" placeholder="durée min"></div>
+    </div>
+    <button class="btn green" id="saveAct" style="margin-bottom:11px">Enregistrer</button>
     <div class="stats four">
       <div class="stat"><div class="v num" id="sBase">0</div><div class="k">Base</div></div>
       <div class="stat"><div class="v num" style="color:var(--p10)" id="sSteps">0</div><div class="k">Pas</div></div>
-      <div class="stat"><div class="v num" style="color:var(--p20)" id="sSport">0</div><div class="k">Séance 50 %</div></div>
+      <div class="stat"><div class="v num" style="color:var(--p20)" id="sSport">0</div><div class="k">Sport 50 %</div></div>
       <div class="stat"><div class="v num" id="sTot">0</div><div class="k">Retenu</div></div>
     </div>
     <div class="note">Tes <b>pas comptent à 100 %</b> : plus tu marches, plus tu manges. Les séances ne comptent qu'à <b>50 %</b>, parce que les formules surestiment la dépense en salle de 20 à 30 %.</div>
@@ -666,22 +700,6 @@ nav button.on svg{stroke:var(--p15)}
       <b>Sur le dos :</b> tirages verticaux et pull-over travaillent la <b>largeur</b> (grand dorsal), le rowing travaille l'<b>épaisseur</b>. Ton programme penche volontairement vers la largeur.
     </div>
   </div>
-  <div class="card">
-    <div class="eyebrow">Mes aliments</div>
-    <div class="row" style="margin-bottom:10px">
-      <div style="flex:2"><label class="fld" for="mfName">Nom</label><input type="text" id="mfName" placeholder="Barre protéinée"></div>
-    </div>
-    <div class="row" style="margin-bottom:10px">
-      <div><label class="fld" for="mfKcal">kcal / 100 g</label><input type="number" id="mfKcal" inputmode="numeric" placeholder="350"></div>
-      <div><label class="fld" for="mfProt">Protéines / 100 g</label><input type="number" id="mfProt" inputmode="decimal" step="0.1" placeholder="30"></div>
-    </div>
-    <div style="margin-bottom:10px"><label class="fld" for="mfUnit">Poids d'une unité en g (optionnel)</label>
-      <input type="number" id="mfUnit" inputmode="numeric" placeholder="60 — pour écrire « 1 barre »"></div>
-    <button class="btn green" id="mfAdd">Ajouter cet aliment</button>
-    <div id="mfList" style="margin-top:12px"></div>
-    <div class="note">Ajoute ce que tu manges vraiment et qui manque à la base : ta whey précise, ta barre, un plat du traiteur. Les valeurs sont sur l'emballage, pour 100 g.</div>
-  </div>
-
   <div class="card"><div class="eyebrow">Mes plats</div><div id="savedList"></div></div>
   <div class="card">
     <div class="eyebrow">Sauvegarde</div>
@@ -776,7 +794,9 @@ function load(){
   if(!DB.extraEx)DB.extraEx={};
   if(!DB.exOrder)DB.exOrder={};
   for(var d in DB.days){var x=DB.days[d];
-    if(x.foods&&!x.meals){x.meals={matin:[],midi:[],soir:[],collation:x.foods};delete x.foods}}
+    if(x.foods&&!x.meals){x.meals={matin:[],midi:[],soir:[],collation:x.foods};delete x.foods}
+    if(x.gym===undefined){x.gym=0;
+      if(x.met===5){x.gym=x.min||70;x.met=0;x.min=0}}}
 }
 function save(){STORE.set(KEY,JSON.stringify(DB))}
 var UNDO_KEY='focus_undo';
@@ -788,7 +808,8 @@ function doUndo(){
   var u=hasUndo();if(!u){toast('Rien \u00e0 annuler');return}
   for(var k in u.db)DB[k]=u.db[k];
   STORE.set(UNDO_KEY,'');save();redraw();toast('Annul\u00e9 : '+u.t)}
-function day(d){d=d||today();if(!DB.days[d])DB.days[d]={meals:{matin:[],midi:[],soir:[],collation:[]},steps:0,met:0,min:0,closed:false};
+function day(d){d=d||today();if(!DB.days[d])DB.days[d]={meals:{matin:[],midi:[],soir:[],collation:[]},steps:0,gym:0,met:0,min:0,closed:false};
+ if(DB.days[d].gym===undefined)DB.days[d].gym=0;
  if(!DB.days[d].meals)DB.days[d].meals={matin:[],midi:[],soir:[],collation:[]};return DB.days[d]}
 
 /* ═══ CALENDRIER : 11 semaines, blocs 1-2 / 3-6 / 7-11, allégées S6 et S11 ═══ */
@@ -805,73 +826,33 @@ function stepTarget(){return DB.cfg.mod===2?9000:8000}
 
 /* ═══ ÉNERGIE : pas crédités 100 %, séances 50 % ═══ */
 function bmr(){var c=DB.cfg;return Math.round(10*c.w+6.25*c.h-5*c.age+5)}
-function base(){return Math.round(bmr()*1.35)}
-function stepKcal(s){return Math.round(Math.max(0,(s||0)-4000)*0.00045*DB.cfg.w)}
+function base(){return Math.round(bmr()*1.20)}   /* sédentaire strict : les pas sont comptés à part */
+function stepKcal(s){return Math.round(Math.max(0,(s||0))*0.00045*DB.cfg.w)}
 function sportKcal(m,mi){if(!m||!mi)return 0;return Math.round(m*3.5*DB.cfg.w/200*mi)}
+function gymKcal(mi){return mi?Math.round(5*3.5*DB.cfg.w/200*mi):0}
+function sessMinutes(key){
+  if(!SESS[key])return 70;
+  var L=exList(key,blocOf(progWeek()),isDeload(progWeek())),sec=0;
+  for(var i=0;i<L.length;i++){
+    var o=L[i],m=(o.sets||'').match(/^(\d+)\s*x\s*(\d+)(?:-(\d+))?\s*(s)?/i);
+    if(!m)continue;
+    var n=parseInt(m[1]),reps=m[3]?parseInt(m[3]):parseInt(m[2]),hold=!!m[4];
+    var exec=hold?(reps+10):(reps*3.5+10);
+    if(/c\u00f4t\u00e9|jambe|bras/i.test(o.sets))exec*=2;
+    var rest=o.anc?150:(/back-off/i.test(o.nom)?120:(o.ss?60:(o.mus==='Abdos'?45:75)));
+    sec+=n*exec+(n-1)*rest+60;
+  }
+  return Math.round((sec+12*60)/60)}
 function defNow(){
   if(DB.cfg.phase==='maintien')return 0;
   if(DB.cfg.phase==='masse')return -250;
   return isDeload(progWeek())?150:DB.cfg.def}
-function spent(x){return base()+stepKcal(x.steps)+sportKcal(x.met,x.min)}
-function credited(x){return base()+stepKcal(x.steps)+Math.round(sportKcal(x.met,x.min)*0.5)}
-function budgetFor(x){return Math.max(FLOOR,Math.min(3200,Math.round((credited(x)-defNow())/10)*10))}
+function spent(x){return base()+stepKcal(x.steps)+gymKcal(x.gym)+sportKcal(x.met,x.min)}
+function credited(x){return base()+stepKcal(x.steps)+Math.round(gymKcal(x.gym)*0.5)+Math.round(sportKcal(x.met,x.min)*0.5)}
+function budgetRaw(x){return credited(x)-defNow()}
+function budgetFor(x){return Math.max(FLOOR,Math.min(3200,budgetRaw(x)))}
 function budget(){return budgetFor(day(curDay()))}
 
-var FOODS=[
- ['poulet',165,31],['blanc de poulet',165,31],['dinde',135,29],['boeuf',217,26],['steak hache',180,26],
- ['porc',242,27],['jambon',110,18],['saumon',208,20],['thon',132,28],['cabillaud',82,18],
- ['crevette',99,24],['sardine',208,25],['oeuf',143,13],['oeufs',143,13],['blanc oeuf',52,11],
- ['riz',130,2.7],['riz complet',123,2.6],['pates',158,5.8],['quinoa',120,4.4],['semoule',112,3.8],['boulgour',83,3],
- ['pomme de terre',87,2],['patate douce',90,2],['lentilles',116,9],['pois chiches',164,9],
- ['haricots rouges',127,9],['pain',265,9],['pain complet',247,13],['biscotte',400,12],
- ['flocons avoine',380,13],['avoine',380,13],['muesli',380,10],['cereales',380,8],
- ['brocoli',34,2.8],['haricots verts',31,1.8],['courgette',17,1.2],['tomate',18,0.9],
- ['salade',15,1.4],['carotte',41,0.9],['epinard',23,2.9],['poivron',26,1],['concombre',15,0.7],
- ['champignon',22,3],['aubergine',25,1],['chou fleur',25,1.9],['petit pois',81,5],['ratatouille',60,1.3],
- ['pomme',52,0.3],['banane',89,1.1],['orange',47,0.9],['fraise',32,0.7],['kiwi',61,1.1],
- ['raisin',69,0.7],['ananas',50,0.5],['mangue',60,0.8],['poire',57,0.4],['myrtille',57,0.7],
- ['fromage blanc',75,8],['skyr',63,11],['yaourt',61,3.5],['yaourt grec',97,9],['lait',46,3.3],
- ['fromage',380,25],['comte',410,27],['mozzarella',280,22],['feta',264,14],['parmesan',400,36],
- ['huile',884,0],['huile olive',884,0],['beurre',717,0.9],['avocat',160,2],
- ['amande',579,21],['noix',654,15],['noisette',628,15],['cacahuete',567,26],['beurre cacahuete',588,25],
- ['chocolat',546,5],['chocolat noir',598,7.8],['miel',304,0.3],['sucre',400,0],['confiture',250,0.4],
- ['pizza',266,11],['burger',295,15],['frite',312,3.4],['kebab',215,15],['sandwich',250,11],
- ['sushi',150,7],['pate a tartiner',539,6],['biscuit',480,6],['chips',536,6],['croissant',406,8],
- ['whey',390,78],['proteine',390,78],['tofu',76,8],['houmous',166,8],['soupe',40,1.5],
- ['creme fraiche',300,2.5],['mayonnaise',680,1],['ketchup',110,1],['cafe',2,0.1],['the',1,0],['biere',43,0.5],['vin',83,0.1]
-];
-var UNITS={'oeuf':55,'oeufs':55,'banane':120,'pomme':180,'orange':150,'kiwi':75,'poire':170,'croissant':60,
- 'biscotte':10,'yaourt':125,'pizza':350,'burger':220,'sandwich':180,'biscuit':12,'biere':250};
-function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z ]/g,' ').replace(/\s+/g,' ').trim()}
-function allFoods(){return (DB.myfoods&&DB.myfoods.length)?DB.myfoods.concat(FOODS):FOODS}
-function matchFood(q){q=norm(q);if(!q)return null;var best=null,bs=0;var F=allFoods();
-  for(var i=0;i<F.length;i++){var n=norm(F[i][0]),s=0;
-    if(n===q)s=100;else if(q.indexOf(n)>-1)s=60+n.length;else if(n.indexOf(q)>-1)s=40+q.length;
-    else{var w=q.split(' ');for(var j=0;j<w.length;j++){if(w[j].length>3&&n.indexOf(w[j])>-1)s=Math.max(s,25+w[j].length)}}
-    if(s>bs){bs=s;best=F[i]}}
-  return bs>0?best:null}
-function parseFood(line){
-  var m=line.match(/^\s*(\d+[.,]?\d*)\s*(g|gr|grammes?|ml)?\s*(?:de\s+|d')?(.+)$/i);
-  var qty=null,name=line,unitG=false;
-  if(m){qty=parseFloat(m[1].replace(',','.'));unitG=!!m[2];name=m[3]}
-  else{var m2=line.match(/^(.+?)\s+(\d+[.,]?\d*)\s*(g|gr|grammes?|ml)?\s*$/i);
-    if(m2){name=m2[1];qty=parseFloat(m2[2].replace(',','.'));unitG=!!m2[3]}}
-  var f=matchFood(name);if(!f)return null;
-  var grams;
-  if(qty===null)grams=100;else if(unitG)grams=qty;
-  else{
-    var u=null;
-    if(f.length>3&&f[3]>0)u=f[3];
-    else for(var k in UNITS){if(norm(name).indexOf(k)>-1){u=UNITS[k];break}}
-    grams=(u&&qty<=15)?qty*u:qty}
-  return{label:f[0]+' · '+Math.round(grams)+' g',kcal:Math.round(f[1]*grams/100),
-    prot:Math.round(f[2]*grams/100*10)/10,f:f[0],g:Math.round(grams)}}
-function recompute(fname,grams){
-  var F=allFoods(),f=null;
-  for(var i=0;i<F.length;i++)if(F[i][0]===fname){f=F[i];break}
-  if(!f)return null;
-  return{label:f[0]+' · '+Math.round(grams)+' g',kcal:Math.round(f[1]*grams/100),
-    prot:Math.round(f[2]*grams/100*10)/10,f:f[0],g:Math.round(grams)}}
 var HAND=[['Paume protéines',130,26],['Poing légumes',45,2],['Main féculents',180,4],
  ['Pouce de gras',110,0],['Yaourt / skyr',110,14],['Un fruit',85,1]];
 
@@ -923,14 +904,14 @@ function drawMeals(){var x=day(curDay()),h='';
     if(!a.length)h+='<div class="empty">&mdash;</div>';
     else for(var j=0;j<a.length;j++){
       var it=a[j];
-      if(EDIT&&EDIT.m===key&&EDIT.i===j&&it.f){
-        h+='<div class="editrow"><div class="en">'+it.f+'</div>'+
+      if(EDIT&&EDIT.m===key&&EDIT.i===j&&it.g){
+        h+='<div class="editrow"><div class="en">'+(it.nom||it.label)+'</div>'+
            '<input type="number" inputmode="numeric" id="editG" value="'+(it.g||100)+'">'+
            '<span class="eu">g</span>'+
            '<button class="eok" data-m="'+key+'" data-i="'+j+'">OK</button>'+
            '<button class="eno">Annuler</button></div>';
       } else {
-        h+='<div class="item"><div class="nm'+(it.f?' edt':'')+'" data-m="'+key+'" data-i="'+j+'">'+it.label+
+        h+='<div class="item"><div class="nm'+(it.g?' edt':'')+'" data-m="'+key+'" data-i="'+j+'">'+it.label+
            '<i>'+it.prot+' g P</i></div>'+
            '<div class="kc">'+it.kcal+'</div>'+
            '<button class="del" data-m="'+key+'" data-i="'+j+'" aria-label="Retirer">&times;</button></div>';
@@ -949,14 +930,27 @@ function drawMeals(){var x=day(curDay()),h='';
     var g=parseFloat(($('editG').value||'').replace(',','.'));
     var arr=day(curDay()).meals[this.dataset.m],it=arr[+this.dataset.i];
     if(isNaN(g)||g<=0||g>5000){toast('Quantit\u00e9 invalide');return}
-    var r=recompute(it.f,g);
-    if(!r){toast('Aliment introuvable');EDIT=null;drawMeals();return}
-    arr[+this.dataset.i]=r;EDIT=null;save();drawJour();toast('Quantit\u00e9 modifi\u00e9e')};
+    if(!it.g){toast('Quantit\u00e9 non modifiable');EDIT=null;drawMeals();return}
+    var f=g/it.g, nm=it.nom||it.label;
+    arr[+this.dataset.i]={label:nm+' \u00b7 '+Math.round(g)+' g',
+      kcal:Math.round(it.kcal*f),prot:Math.round(it.prot*f*10)/10,nom:nm,g:Math.round(g)};
+    EDIT=null;save();drawJour();toast('Quantit\u00e9 modifi\u00e9e')};
   var no=$('mealList').querySelectorAll('.eno');
   for(var nn=0;nn<no.length;nn++)no[nn].onclick=function(){EDIT=null;drawMeals()};
   var sv=$('mealList').querySelectorAll('.sv');
-  for(var m=0;m<sv.length;m++)sv[m].onclick=function(){LASTADD=day(curDay()).meals[this.dataset.m].slice();
-    $('savebar').classList.add('on');$('saveName').value='';$('saveName').focus()}}
+  for(var m=0;m<sv.length;m++)sv[m].onclick=function(){
+    var a=day(curDay()).meals[this.dataset.m]||[];
+    if(!a.length){toast('Repas vide');return}
+    var k=0,p=0,items=[];
+    for(var q=0;q<a.length;q++){k+=a[q].kcal;p+=a[q].prot;
+      items.push({label:a[q].label,kcal:a[q].kcal,prot:a[q].prot,nom:a[q].nom,g:a[q].g})}
+    var nom=(a.length===1&&a[0].nom)?a[0].nom:(MEALS.filter(function(x){return x[0]===this}, this).length?'':'');
+    nom=a.length===1?(a[0].nom||a[0].label):'Repas '+fmtD(curDay());
+    $('fNom').value=nom;$('fK').value=Math.round(k);$('fP').value=Math.round(p*10)/10;$('fG').value='';
+    DB.saved.push({name:nom,kcal:Math.round(k),prot:Math.round(p*10)/10,items:items});
+    save();drawSaved();
+    $('fNom').value='';$('fK').value='';$('fP').value='';
+    toast('\u00ab '+nom+' \u00bb enregistr\u00e9 dans tes plats')}}
 
 /* ═══ PROGRAMME ═══
    exercice = [nom, [bloc1,bloc2,bloc3], conseil, ancrage, muscle, alternative, semaine('odd'|'even')] */
@@ -1139,7 +1133,7 @@ function drawWeek(){
   var W=weekDates(),L=['L','M','M','J','V','S','D'],h='',n=0;
   for(var i=0;i<7;i++){
     var key=W[i],done=DB.sessions[key],plan=DB.plan[key],sugg=suggFor(key);
-    var x=DB.days[key],volley=x&&x.met===6.3;
+    var x=DB.days[key],volley=x&&x.met===6.3&&x.min;
     var lbl='',cls='';
     if(done&&SESS[done]){lbl=SESS[done].s;cls=' done';n++}
     else if(volley){lbl='Volley';cls=' act'}
@@ -1163,9 +1157,9 @@ function drawWeek(){
     var xa=DB.days[W[k]],xb=DB.days[W[k+1]];
     if(a&&b2&&SESS[a]&&SESS[b2]&&SESS[a].p===SESS[b2].p){
       warn='<div class="warn">Deux séances <b>'+SESS[a].p+'</b> sur deux jours collés ('+fmtD(W[k])+' et '+fmtD(W[k+1])+'). Les mêmes muscles n\'auront pas récupéré. Décale d\'un jour si tu peux, sinon allège la seconde.</div>';break}
-    if(xa&&xa.met===6.3&&b2&&SESS[b2]&&SESS[b2].p==='jambes'){
+    if(xa&&xa.met===6.3&&xa.min&&b2&&SESS[b2]&&SESS[b2].p==='jambes'){
       warn='<div class="warn">Volley le '+fmtD(W[k])+' puis <b>jambes</b> le lendemain. Tes jambes ont déjà encaissé les sauts. Décale de 48 h.</div>';break}
-    if(xb&&xb.met===6.3&&a&&SESS[a]&&SESS[a].p==='jambes'){
+    if(xb&&xb.met===6.3&&xb.min&&a&&SESS[a]&&SESS[a].p==='jambes'){
       warn='<div class="warn">Séance <b>jambes</b> le '+fmtD(W[k])+' puis volley le lendemain. Tu joueras sur des jambes fatiguées : risque de blessure accru.</div>';break}
   }
   $('weekWarn').innerHTML=warn}
@@ -1188,11 +1182,11 @@ function drawPicker(){
   for(var j=0;j<bs.length;j++)bs[j].onclick=function(){
     var k=this.dataset.k,d2=PICKDAY;
     if(k==='__clear'){delete DB.sessions[d2];delete DB.plan[d2];
-      var x=DB.days[d2];if(x&&(x.met===5||x.met===6.3)){x.met=0;x.min=0}
+      var x=DB.days[d2];if(x){x.gym=0;if(x.met===6.3){x.met=0;x.min=0}}
       toast('Journée effacée')}
-    else if(k==='__volley'){var y=day(d2);y.met=6.3;y.min=90;delete DB.sessions[d2];delete DB.plan[d2];toast('Volley enregistré')}
+    else if(k==='__volley'){var y=day(d2);y.met=6.3;y.min=90;y.gym=0;delete DB.sessions[d2];delete DB.plan[d2];toast('Volley enregistré')}
     else if(d2<=today()){DB.sessions[d2]=k;delete DB.plan[d2];
-      var z=day(d2);if(!z.met){z.met=5;z.min=70}toast(SESS[k].n+' validée le '+fmtD(d2))}
+      var z=day(d2);if(!z.gym)z.gym=70;toast(SESS[k].n+' validée le '+fmtD(d2))}
     else{DB.plan[d2]=k;toast(SESS[k].n+' planifiée le '+fmtD(d2))}
     PICKDAY=null;save();drawWeek();drawPicker();drawJour();drawBilan()}}
 
@@ -1310,12 +1304,15 @@ function drawJour(){
   $('kcalLeft').innerHTML=(left<0?'+'+Math.abs(left):left)+'<small>'+(left<0?'kcal au-dessus':'kcal restantes')+'</small>';
   $('kcalIn').textContent=T.k;$('kcalBudget').textContent=B;
   $('barEnd').textContent=B;
-  var st=stepKcal(x.steps),sp=Math.round(sportKcal(x.met,x.min)*0.5),df=defNow();
+  var st=stepKcal(x.steps),gm=Math.round(gymKcal(x.gym)*0.5),ac=Math.round(sportKcal(x.met,x.min)*0.5),df=defNow();
+  var raw=budgetRaw(x);
   var cl='<b>'+base()+'</b> base'+
     ' <b>+ '+st+'</b> pas'+(x.steps?' ('+x.steps+')':' (0)')+
-    ' <b>+ '+sp+'</b> séance'+(x.min?' ('+x.min+' min, 50 %)':'')+
+    (x.gym?' <b>+ '+gm+'</b> muscu ('+x.gym+' min, 50 %)':'')+
+    (x.met&&x.min?' <b>+ '+ac+'</b> '+(ACTNAME[String(x.met)]||'sport')+' ('+x.min+' min, 50 %)':'')+
     (df>=0?' <b>- '+df+'</b> déficit':' <b>+ '+Math.abs(df)+'</b> surplus')+
-    '<br><span class="eq">= '+B+' kcal</span>'+(B===FLOOR?'  (plancher atteint)':'');
+    '<br><span class="eq">= '+raw+' kcal</span>';
+  if(B!==raw)cl+='<br><span class="eq">\u2192 '+B+' kcal</span> '+(B===FLOOR?'(plancher de '+FLOOR+' appliqué)':'(plafond de 3200 appliqué)');
   $('calcLine').innerHTML=cl;
   var bl=$('barLoad');bl.style.width=pct+'%';
   if(T.k>B)bl.classList.add('over');else bl.classList.remove('over');
@@ -1328,8 +1325,29 @@ function drawJour(){
   $('protIn').textContent=T.p;$('protGoal').textContent=pg;
   $('protBar').style.width=Math.min(100,T.p/pg*100)+'%';
   $('protBar').style.background=T.p>=pg?'var(--p10)':'var(--p20)';
-  $('sBase').textContent=base();$('sSteps').textContent=stepKcal(x.steps);
-  $('sSport').textContent=Math.round(sportKcal(x.met,x.min)*0.5);$('sTot').textContent=credited(x);
+  var kPas=stepKcal(x.steps),kGym=Math.round(gymKcal(x.gym)*0.5),kAct=Math.round(sportKcal(x.met,x.min)*0.5);
+  $('sBase').textContent=base();$('sSteps').textContent=kPas;
+  $('sSport').textContent=kGym+kAct;$('sTot').textContent=credited(x);
+  var ch='';
+  ch+='<span class="ac '+(x.steps?'pas':'vide')+'">'+(x.steps?(x.steps).toLocaleString('fr-FR')+' pas':'pas non saisis')+
+      (x.steps?' <b>+'+kPas+'</b>':'')+'</span>';
+  if(x.gym)ch+='<span class="ac gym">Muscu '+x.gym+' min <b>+'+kGym+'</b></span>';
+  if(x.met&&x.min)ch+='<span class="ac spo">'+(ACTNAME[String(x.met)]||'Activité')+' '+x.min+' min <b>+'+kAct+'</b></span>';
+  if(!x.gym&&!(x.met&&x.min))ch+='<span class="ac vide">aucune séance</span>';
+  $('actChips').innerHTML=ch;
+  var gr=$('gymRow');
+  var skk=DB.sessions[curDay()],nomS=(skk&&SESS[skk])?SESS[skk].n:null;
+  if(x.gym){
+    gr.classList.add('on');
+    $('gymIcon').textContent='\u2713';
+    $('gymState').textContent=(nomS||'Séance de muscu')+' \u00b7 '+x.gym+' min';
+    $('gymKcalTxt').textContent='+'+kGym;
+  }else{
+    gr.classList.remove('on');
+    $('gymIcon').textContent='\u2014';
+    $('gymState').textContent='Aucune séance validée';
+    $('gymKcalTxt').textContent='';
+  }
   if(document.activeElement!==$('steps'))$('steps').value=x.steps||'';
   if(document.activeElement!==$('actMin'))$('actMin').value=x.min||'';
   $('actType').value=x.met||0;
@@ -1341,6 +1359,15 @@ function drawJour(){
   if(under)$('floorTxt').innerHTML='Tu as mangé <b>'+T.k+' kcal</b>, sous le plancher de 1 900. En dessous de cette limite, ton corps puise dans le muscle plutôt que dans le gras. Ce n\'est pas une bonne journée : remonte demain, ne compense pas.';
 
   var pLeft=Math.max(0,Math.round(pg-T.p)),r;
+  var reel=credited(x)-B, manque=defNow()-reel;
+  if(DB.cfg.phase==='seche'&&manque>40&&T.k>0){
+    var pasNec=Math.ceil(manque/(0.00045*DB.cfg.w)/500)*500;
+    r='Journée peu active : même en mangeant tout ton plafond, ton déficit réel ne sera que de <b>'+reel+' kcal</b> au lieu de '+defNow()+
+      '. Le plancher de '+FLOOR+' t\'empêche de descendre plus bas. <b>Environ '+pasNec.toLocaleString('fr-FR')+' pas de plus</b> te ramèneraient à la cible.';
+    $('reco').innerHTML=r;drawMeals();drawDayNav();drawDup();
+    $('topWk').textContent=beforeStart()?('départ '+fmtD(DB.cfg.start)):
+      ('S'+progWeek()+'/'+NWEEKS+' · Bloc '+blocOf(progWeek())+(isDeload(progWeek())?' · allégée':''));
+    return}
   if(beforeStart())r='Le programme démarre le <b>'+fmtD(DB.cfg.start)+'</b>. D\'ici là, note ton poids et ton tour de taille pour avoir un point de départ propre.';
   else if(T.k===0)r='Ajoute ton petit-déjeuner pour lancer la journée.';
   else if(T.k>B+250)r='Journée au-dessus du plafond. <b>Aucun drame</b> — reprends demain, ne compense pas en sautant un repas.';
@@ -1355,7 +1382,7 @@ function drawJour(){
     ('S'+progWeek()+'/'+NWEEKS+' · Bloc '+blocOf(progWeek())+(isDeload(progWeek())?' · allégée':''));
 }
 
-var ACTNAME={'5':'Muscu salle','8':'HIIT maison','6.3':'Volley','7.5':'Rameur / vélo','4.3':'Marche rapide'};
+var ACTNAME={'6.3':'Volley','8.3':'Natation','7.3':'Tennis / padel','6':'Randonnée','7.5':'Vélo','9.8':'Course à pied','8':'HIIT maison','4.3':'Marche rapide','5.5':'Football','6.5':'Basket','5':'Muscu salle'};
 function daySummary(d){
   d=d||today();var x=day(d),T=dayTot(x),S=spent(x),C=credited(x),bal=C-T.k,w=progWeek(),L=[];
   L.push('JOURNEE DU '+fmtD(d)+'  ·  S'+w+'/'+NWEEKS+' · Bloc '+blocOf(w)+' ('+BLOCS[blocOf(w)-1].n+')'+(isDeload(w)?' · allégée':''));
@@ -1366,7 +1393,9 @@ function daySummary(d){
   L.push('ENERGIE');
   L.push('  Ingéré   : '+T.k+' kcal · '+T.p+' g protéines  (objectif '+DB.cfg.prot+' g)');
   L.push('  Plafond  : '+budgetFor(x)+' kcal   [plancher '+FLOOR+']');
-  L.push('  Dépensé  : '+C+' kcal retenus (base '+base()+' + pas '+stepKcal(x.steps)+' + séance '+Math.round(sportKcal(x.met,x.min)*0.5)+' sur '+sportKcal(x.met,x.min)+')');
+  L.push('  Dépensé  : '+C+' kcal retenus (base '+base()+' + pas '+stepKcal(x.steps)+
+    (x.gym?' + muscu '+Math.round(gymKcal(x.gym)*0.5)+' sur '+gymKcal(x.gym):'')+
+    (x.met&&x.min?' + '+(ACTNAME[String(x.met)]||'sport')+' '+Math.round(sportKcal(x.met,x.min)*0.5)+' sur '+sportKcal(x.met,x.min):'')+')');
   L.push('  Balance  : '+(bal>=0?'déficit ':'surplus ')+Math.abs(bal)+' kcal   [cible '+defNow()+']');
   L.push('  Pas      : '+(x.steps||0)+'  (objectif '+stepTarget()+')');
   L.push('');
@@ -1381,8 +1410,8 @@ function daySummary(d){
     L.push('SEANCE — '+P.n+(x.min?' · '+x.min+' min':''));
     for(var e=0;e<EL.length;e++){var v=DB.loads[exKey(EL[e].nom)];
       L.push('  '+EL[e].nom+' — '+EL[e].sets+(v?' @ '+v+' kg':'')+'   ['+EL[e].mus+']'+(EL[e].ss?' [SS '+EL[e].ss+']':''))}}
-  else if(x.met)L.push('ACTIVITE : '+(ACTNAME[String(x.met)]||'séance')+' · '+x.min+' min');
-  else L.push('SEANCE : repos');
+  if(x.met&&x.min)L.push('ACTIVITE : '+(ACTNAME[String(x.met)]||'sport')+' · '+x.min+' min');
+  if(!s&&!x.gym&&!(x.met&&x.min))L.push('SEANCE : repos');
   L.push('');
   var wa=DB.waist.length?DB.waist[DB.waist.length-1]:null;
   if(wa)L.push('Tour de taille : '+wa.v.toFixed(1)+' cm (le '+fmtD(wa.d)+')');
@@ -1393,7 +1422,7 @@ function dayKeys(n){var out=[],d=today();
   for(var i=n-1;i>=0;i--)out.push(addDays(d,-i));return out}
 function dayBalance(k){var x=DB.days[k];if(!x)return null;
   var T=dayTot(x);if(T.k===0)return null;
-  return{k:k,in:T.k,prot:T.p,steps:x.steps||0,met:x.met||0,min:x.min||0,
+  return{k:k,in:T.k,prot:T.p,steps:x.steps||0,gym:x.gym||0,met:x.met||0,min:x.min||0,
     spent:spent(x),cred:credited(x),bal:credited(x)-T.k}}
 function drawRange(){var h='',r=[[7,'7 jours'],[14,'14 jours'],[30,'30 jours']];
   for(var i=0;i<r.length;i++)h+='<button data-n="'+r[i][0]+'"'+(r[i][0]===RANGE?' class="on"':'')+'>'+r[i][1]+'</button>';
@@ -1458,7 +1487,7 @@ function drawBilan(){
   if(!rows.length)hl='<div class="empty big">Aucune journée enregistrée.</div>';
   else for(var z=rows.length-1;z>=0;z--){var r3=rows[z],pos=r3.bal>=0;
     var sk=DB.sessions[r3.k];
-    var tag=sk&&SESS[sk]?SESS[sk].s:(r3.met?(ACTNAME[String(r3.met)]||'Activité'):'Repos');
+    var tag=sk&&SESS[sk]?SESS[sk].s:(r3.gym?'Muscu':(r3.met?(ACTNAME[String(r3.met)]||'Activité'):'Repos'));
     hl+='<div class="dayrow"><span class="dd">'+fmtD(r3.k)+'</span><span class="tag">'+tag+'</span>'+
         '<span style="color:var(--brume);font-size:11.5px" class="num">'+r3.in+' kcal · '+Math.round(r3.prot)+' g P</span>'+
         '<span class="bal '+(pos?'pos':'neg')+'">'+(pos?'-':'+')+Math.abs(r3.bal)+'</span></div>'}
@@ -1560,9 +1589,6 @@ function exportTxt(){
     l.push('  '+fmtD(sk[q])+' : '+(SESS[kk]?SESS[kk].n:kk))}
   else l.push('  (aucune)');
   l.push('');
-  if(DB.myfoods.length){l.push('ALIMENTS PERSONNELS');
-    for(var f=0;f<DB.myfoods.length;f++)l.push('  '+DB.myfoods[f][0]+' : '+DB.myfoods[f][1]+' kcal / '+DB.myfoods[f][2]+' g P pour 100 g');
-    l.push('')}
   l.push('PROGRESSION DES CHARGES');
   var pk=Object.keys(DB.loadHist||{}),pany=false;
   var nameOf={};var sk2=sessKeys();
@@ -1579,27 +1605,39 @@ function exportTxt(){
   return l.join('\n')}
 
 $('addFood').onclick=function(){
-  var t=$('foodTxt').value.trim();if(!t){toast('Écris d\'abord ton repas');return}
-  var parts=t.split(/[,;\n+]+/),ok=[],ko=[];
-  for(var i=0;i<parts.length;i++){var p=parts[i].trim();if(!p)continue;
-    var r=parseFood(p);if(r)ok.push(r);else ko.push(p)}
-  if(!ok.length){toast('Aucun aliment reconnu');return}
-  addItems(ok);LASTADD=ok;$('foodTxt').value='';
-  $('savebar').classList.add('on');$('saveName').value='';
-  toast(ok.length+' ajouté'+(ok.length>1?'s':'')+(ko.length?' · non reconnu : '+ko[0]:''))};
-$('doSave').onclick=function(){
-  var n=$('saveName').value.trim();
-  if(!n){toast('Donne un nom au plat');return}
-  if(!LASTADD||!LASTADD.length){toast('Rien à enregistrer');return}
-  var k=0,p=0,items=[];
-  for(var i=0;i<LASTADD.length;i++){k+=LASTADD[i].kcal;p+=LASTADD[i].prot;
-    items.push({label:LASTADD[i].label,kcal:LASTADD[i].kcal,prot:LASTADD[i].prot})}
-  DB.saved.push({name:n,kcal:Math.round(k),prot:Math.round(p*10)/10,items:items});
-  save();drawSaved();$('savebar').classList.remove('on');toast(n+' enregistré')};
-$('noSave').onclick=function(){$('savebar').classList.remove('on')};
-$('saveAct').onclick=function(){var x=day(curDay());
-  x.steps=parseInt($('steps').value)||0;x.met=parseFloat($('actType').value)||0;x.min=parseInt($('actMin').value)||0;
-  save();drawJour();drawBilan();drawWeek();toast('Dépense mise à jour')};
+  var nom=($('fNom').value||'').trim();
+  var g=parseFloat(($('fG').value||'').replace(',','.'));
+  var k=parseFloat(($('fK').value||'').replace(',','.'));
+  var p=parseFloat(($('fP').value||'').replace(',','.'));
+  if(!nom){toast('Donne un nom au plat');return}
+  if(isNaN(k)||k<0||k>5000){toast('Calories invalides');return}
+  if(isNaN(p)||p<0)p=0;
+  if(isNaN(g)||g<=0)g=0;
+  var it={label:nom+(g?' \u00b7 '+Math.round(g)+' g':''),kcal:Math.round(k),prot:Math.round(p*10)/10,nom:nom};
+  if(g){it.g=Math.round(g)}
+  addItems([it]);
+  if($('fSave').checked){
+    DB.saved.push({name:nom,kcal:Math.round(k),prot:Math.round(p*10)/10,
+      items:[{label:it.label,kcal:it.kcal,prot:it.prot,nom:nom,g:it.g}]});
+    save();drawSaved();
+  }
+  $('fNom').value='';$('fG').value='';$('fK').value='';$('fP').value='';$('fSave').checked=false;
+  toast(nom+' ajout\u00e9'+($('fSave').checked?' et enregistr\u00e9':''))};
+function majDepense(silencieux){
+  var x=day(curDay());
+  x.steps=parseInt($('steps').value)||0;
+  x.met=parseFloat($('actType').value)||0;
+  x.min=parseInt($('actMin').value)||0;
+  if(x.met&&!x.min)x.min=60;
+  if(!x.met)x.min=0;
+  save();drawJour();drawBilan();drawWeek();
+  if(!silencieux)toast('Dépense mise à jour')}
+$('saveAct').onclick=function(){majDepense()};
+$('steps').onchange=function(){majDepense(true)};
+$('steps').oninput=function(){majDepense(true)};
+$('actType').onchange=function(){majDepense(true)};
+$('actMin').onchange=function(){majDepense(true)};
+$('actMin').oninput=function(){majDepense(true)};
 $('closeDay').onclick=function(){
   var x=day(curDay()),T=totals();
   if(T.k===0){toast('Aucun repas enregistré aujourd\'hui');return}
@@ -1634,7 +1672,7 @@ $('saveWaist').onclick=function(){
 $('doneSess').onclick=function(){
   var jd=curDay();
   DB.sessions[jd]=CUR;delete DB.plan[jd];
-  var x=day(jd);if(!x.met){x.met=5;x.min=70}
+  var x=day(jd);if(!x.gym)x.gym=70;
   save();drawWeek();drawJour();drawBilan();
   toast(SESS[CUR].n+' validée'+(jd!==today()?' le '+fmtD(jd):''))};
 $('saveCfg').onclick=function(){
@@ -1693,29 +1731,7 @@ $('dayPick').onchange=function(){DUPARM=false;EDIT=null;
   CURDAY=(v===today())?null:v; SLOT='matin';
   drawDayNav();drawSeg();drawJour();drawBilan()};
 $('dayToday').onclick=function(){CURDAY=null;drawDayNav();drawJour();drawBilan();toast('Retour \u00e0 aujourd\'hui')};
-function drawMyFoods(){
-  var h='';
-  if(!DB.myfoods.length)h='<div class="empty">Aucun aliment personnel.</div>';
-  else for(var i=0;i<DB.myfoods.length;i++){var f=DB.myfoods[i];
-    h+='<div class="item" style="border-bottom:1px solid var(--trait)"><div class="nm">'+f[0]+
-       '<i>'+f[2]+' g P / 100 g'+(f[3]?' · 1 unité = '+f[3]+' g':'')+'</i></div><div class="kc">'+f[1]+' kcal</div>'+
-       '<button class="del" data-i="'+i+'" aria-label="Supprimer">&times;</button></div>'}
-  $('mfList').innerHTML=h;
-  var d=$('mfList').querySelectorAll('.del');
-  for(var j=0;j<d.length;j++)d[j].onclick=function(){
-    DB.myfoods.splice(+this.dataset.i,1);save();drawMyFoods();toast('Aliment supprim\u00e9')}}
-$('mfAdd').onclick=function(){
-  var n=($('mfName').value||'').trim(),
-      k=parseFloat(($('mfKcal').value||'').replace(',','.')),
-      p=parseFloat(($('mfProt').value||'').replace(',','.'));
-  if(!n){toast('Donne un nom');return}
-  if(isNaN(k)||k<0||k>900){toast('Calories invalides');return}
-  if(isNaN(p)||p<0||p>100){toast('Prot\u00e9ines invalides');return}
-  var u=parseFloat(($('mfUnit').value||'').replace(',','.'));
-  DB.myfoods.push([n,Math.round(k),Math.round(p*10)/10,(isNaN(u)||u<=0)?0:Math.round(u)]);
-  save();drawMyFoods();
-  $('mfName').value='';$('mfKcal').value='';$('mfProt').value='';$('mfUnit').value='';
-  toast(n+' ajout\u00e9 \u00e0 tes aliments')};
+
 function drawUndo(){
   var u=hasUndo();
   $('undoWrap').style.display=u?'block':'none';
@@ -1983,7 +1999,7 @@ function liveGo(n){
     $('startSess').textContent='Commencer la s\u00e9ance';
     var jd=curDay();
     DB.sessions[jd]=CUR;delete DB.plan[jd];
-    var x=day(jd);if(!x.met){x.met=5;x.min=70}
+    var x=day(jd);if(!x.gym)x.gym=70;
     startTimer(0);save();drawWeek();drawJour();drawBilan();
     toast('S\u00e9ance termin\u00e9e et valid\u00e9e');
     return}
@@ -2016,7 +2032,7 @@ $('quickRestore').onclick=function(){
   var b=$('ioBox');b.style.display='block';b.value='';
   b.placeholder='Colle ici ta sauvegarde puis appuie sur Restaurer une sauvegarde (Réglages)';
   toast('Ouvre Réglages pour coller ta sauvegarde')};
-function redraw(){bindTimer();drawUndo();drawStore();drawDaysCfg();drawLive();drawDayNav();drawProgress();drawMyFoods();drawSeg();drawSaved();drawHand();drawJour();drawRange();drawBilan();drawPoids();drawWaist();
+function redraw(){bindTimer();drawUndo();drawStore();drawDaysCfg();drawLive();drawDayNav();drawProgress();drawSeg();drawSaved();drawHand();drawJour();drawRange();drawBilan();drawPoids();drawWaist();
  drawMod();drawProg();drawTabs();drawSess();drawVolume();drawWeek();drawPicker();drawPhase();drawCaps();drawCfg()}
 load();redraw();foldInit();
 if(day(curDay()).closed){$('sumBox').textContent=daySummary(curDay());$('sumWrap').style.display='block'}
