@@ -2037,5 +2037,444 @@ function redraw(){bindTimer();drawUndo();drawStore();drawDaysCfg();drawLive();dr
 load();redraw();foldInit();
 if(day(curDay()).closed){$('sumBox').textContent=daySummary(curDay());$('sumWrap').style.display='block'}
 </script>
+<style>
+#sessOpt{margin-top:-8px;align-items:stretch}
+#sessOpt .olab{flex:0 0 auto;align-self:center;font-family:'Chivo',sans-serif;font-weight:700;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--brume);padding:0 4px 0 2px}
+#sessOpt button{border-style:dashed}
+#sessOpt button.on{border-style:solid}
+.circ-intro{border:1px solid var(--trait);border-radius:10px;padding:12px;margin-bottom:6px;font-size:12.5px;color:var(--brume);line-height:1.55}
+.circ-intro b{color:var(--craie)}
+.circ-intro .big{font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--p15);font-weight:600;display:block;margin-bottom:4px}
+.circhead{font-size:12px;color:var(--brume);line-height:1.5;margin-bottom:6px}
+.circbig{text-align:center;padding:16px 8px 12px;border:1px solid var(--trait);border-radius:12px;margin:8px 0 10px;background:var(--fonte-2)}
+.circbig.w{border-color:var(--p15)}
+.circbig.t,.circbig.r{border-color:var(--p20)}
+.circph{font-family:'Chivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brume)}
+.circbig.w .circph{color:var(--p15)}
+.circbig.t .circph,.circbig.r .circph{color:var(--p20)}
+.circlbl{font-family:'Chivo',sans-serif;font-size:21px;font-weight:900;letter-spacing:-.02em;line-height:1.2;margin:6px 0 2px;color:var(--craie)}
+.circt{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;font-size:58px;font-weight:600;line-height:1.05;color:var(--craie)}
+.circsub{font-size:12px;color:var(--brume);margin-top:2px}
+.circtip{font-size:12.5px;color:var(--brume);line-height:1.55;margin:4px 0 10px}
+.circbtns{display:flex;gap:8px}
+.circbtns .btn{flex:1}
+.circlist{list-style:none;margin:12px 0 0;padding:0;counter-reset:st}
+.circlist li{counter-increment:st;display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--trait);font-size:13px;color:var(--brume)}
+.circlist li:before{content:counter(st,decimal-leading-zero);font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:.7;padding-top:1px}
+.circlist li.now{color:var(--craie);font-weight:600}
+.circlist li.now:before{color:var(--p15);opacity:1}
+.volrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;color:var(--brume)}
+.volrow input{max-width:90px}
+.cfgsub{font-family:'Chivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--brume);margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--trait)}
+</style>
+<script>
+/* ═══ MISE À JOUR — 3 séances salle + circuit kettlebell à la maison + options Bras & épaules / Volley + cardio à la salle ═══ */
+var CT={velo:['Vélo',6.8],ellip:['Vélo elliptique',5],rameur:['Rameur',7],tapis:['Marche inclinée (tapis)',6]};
+var OPT={BRAS:1,VOLLEY:1},NOCARDIO={MAISON:1,VOLLEY:1},VOLMET=6.3,CIRCMET=8;
+function isoWeek(){var d=new Date(today()+'T00:00:00');d.setDate(d.getDate()+3-((d.getDay()+6)%7));
+ var y=new Date(d.getFullYear(),0,4);return 1+Math.round(((d-y)/864e5-3+((y.getDay()+6)%7))/7)}
+function cfgC(){return DB.cfg.cardio}
+function circ(){return DB.cfg.circ}
+function kbTxt(){return String(DB.cfg.kb).replace('.',',')}
+function homeName(){return 'Circuit kettlebell '+kbTxt()+' kg'}
+function act(k){var t=CT[k==='BRAS'?cfgC().bras:cfgC().salle]||CT.velo;return{n:t[0],met:t[1]}}
+function cardioOn(k){return !!(k&&!NOCARDIO[k]&&cfgC().on&&cfgC().apres[k])}
+function cardioKcal(x){return x&&x.cardio?sportKcal(x.cmet||6,x.cardio):0}
+function circExtra(x){return x&&x.gmet&&x.gym?Math.max(0,sportKcal(x.gmet,x.gym)-gymKcal(x.gym)):0}
+function gymCred(x){return Math.round(gymKcal(x.gym)*0.5)+Math.round(circExtra(x)*0.5)}
+function setCardio(x,k){var a=act(k);x.cardio=cfgC().min;x.cmet=a.met;x.cact=a.n}
+function allKeys(){var o=[];for(var k in SESS)if(SESS[k].mod===3)o.push(k);return o}
+function coreKeys(){return allKeys().filter(function(k){return !OPT[k]})}
+function withKeys(f,fn){var s=window.sessKeys;window.sessKeys=f;try{return fn()}finally{window.sessKeys=s}}
+
+/* 1. Programme : 3 séances salle, un seul schéma, plus de blocs ni de module volley */
+delete SESS.V1;delete SESS.V2;
+['MAR','SAM','DIM'].forEach(function(k){SESS[k].ex.forEach(function(e){e[1]=[e[1][0]]})});
+
+/* 1a. Circuit kettlebell : 6 stations qui alternent poussée, tirage, gainage */
+var STATIONS=[
+ ['Swing kettlebell','Ischios','Charnière de hanche : les fesses partent en arrière, puis tu claques les hanches vers l’avant. Les bras guident la KB, ils ne la lèvent pas.','Soulevé de terre KB rapide si le bas du dos tire.',0],
+ ['Pompes','Pectoraux','Corps gainé, poitrine à 5 cm du sol. Garde 1 à 2 répétitions en réserve : c’est un circuit, pas un test.','Mains surélevées sur une chaise, ou genoux au sol.',0],
+ ['Oiseau KB penché','Arrière épaules','Buste à 45°, bras presque tendu, monte sur le côté. Change de bras à mi-temps. L’arrière d’épaule est un de tes points faibles.','Rowing KB buste penché.',1],
+ ['Russian twist KB','Abdos','Ce sont les épaules qui tournent, pas seulement les bras. Pieds au sol si le bas du dos tire.','Sans KB, mains jointes.',0],
+ ['Développé militaire KB','Épaules','Fessiers serrés, coude sous le poignet, descente en 3 s. Change de bras à mi-temps : avec une KB légère, c’est le tempo qui fait le travail.','Bottom-up press : KB tenue à l’envers, plus léger, beaucoup plus de stabilité.',1],
+ ['Planche + passage KB','Abdos','En planche, fais glisser la KB d’un côté à l’autre sous ta poitrine, bassin immobile.','Planche simple.',0]];
+function circTrans(){return Math.max(10,60-circ().work)}
+function circMin(){var c=circ(),n=STATIONS.length;return Math.round((180+c.tours*n*60-circTrans()+(c.tours-1)*c.rest)/60)}
+function buildMaison(){
+ var c=circ(),ex=[['Échauffement',['Halo + swings légers · 3 min'],'Halo 8 par sens, 15 swings légers, 10 grands cercles de bras. Tu montes en température avant le chrono.',0,'Épaules','']];
+ STATIONS.forEach(function(s){ex.push([s[0],[c.tours+' tours · '+c.work+' s'+(s[4]?' ('+Math.round(c.work/2)+' s / bras)':'')],s[2],0,s[1],s[3],null,'C'])});
+ var o={d:'Circuit KB',s:'Maison',p:'maison',n:homeName(),mod:3,circ:1,ex:ex};
+ if(SESS.MAISON){for(var k in o)SESS.MAISON[k]=o[k]}else SESS.MAISON=o}
+
+/* 1b. Option salle : Bras & épaules express, en supersets */
+SESS.BRAS={d:'Option · salle',s:'Bras',p:'bras',n:'Bras & épaules express',mod:3,opt:1,ex:[
+ ['Développé militaire haltères assis',['3 x 8-10 · RIR 2'],'Le seul mouvement lourd de la séance : fais-le en premier, frais. Dossier presque vertical, descente jusqu’aux oreilles.',0,'Épaules','Machine à épaules.'],
+ ['Curl incliné haltères',['3 x 10-12'],'Superset avec l’extension au-dessus de la tête. Banc à 60°, coudes derrière le buste : le biceps travaille étiré.',0,'Bras','Curl à la poulie basse, dos à la machine.',null,'D'],
+ ['Extension triceps au-dessus de la tête',['3 x 10-12'],'Superset avec le curl incliné. Corde à la poulie, dos à la machine : le long chef du triceps travaille étiré.',0,'Bras','Haltère tenu à deux mains, assis.',null,'D'],
+ ['Élévations latérales poulie',['3 x 12-15'],'Superset avec le reverse pec-deck. Poulie basse, câble derrière la jambe, monte jusqu’à l’horizontale.',0,'Épaules','Haltères, buste légèrement penché en avant.',null,'E'],
+ ['Reverse pec-deck',['3 x 15'],'Superset avec les élévations. Dose supplémentaire pour l’arrière d’épaule, un de tes points faibles.',0,'Arrière épaules','Oiseau à la poulie, câbles croisés.',null,'E'],
+ ['Curl marteau',['2 x 12'],'Superset finisher avec le pushdown. Pas plus de 60 s de repos après la paire.',0,'Bras','Corde à la poulie basse.',null,'G'],
+ ['Pushdown barre droite',['2 x 12-15'],'Superset finisher avec le curl marteau. Coudes collés au buste, extension complète.',0,'Bras','Pushdown à la corde.',null,'G']]};
+
+/* 1c. Option volley : échauffement de prévention + match, compté comme activité */
+function buildVolley(){SESS.VOLLEY={d:'Option',s:'Volley',p:'volley',n:'Volley · échauffement & match',mod:3,opt:1,ex:[
+ ['Montées de genoux + pas chassés','2 min','Monte le rythme progressivement, change de direction comme sur le terrain.','Cardio'],
+ ['Cercles de bras','2 x 10 / sens','Petits cercles puis grands. Ton épaule de frappe va encaisser des dizaines de smashs.','Épaules'],
+ ['Rotations externes d’épaule','2 x 15 / bras','Élastique si tu en as un, sinon bras à 90° sans charge, lentement. La coiffe des rotateurs est ce qui lâche en premier au volley.','Épaules'],
+ ['Fentes marchées + rotation du buste','2 x 8 / jambe','Ouvre les hanches et réveille les quadriceps avant les sauts.','Quadriceps'],
+ ['Sauts progressifs','2 x 8','Sauts sur place, de 50 % à 90 % de ta détente. Réception souple, genoux dans l’axe des pieds.','Mollets'],
+ ['Match ou entraînement',DB.cfg.volMin+' min','Appuie sur Terminer à la fin : le volley est enregistré comme activité dans l’onglet Jour.','Volley']
+].map(function(a){return [a[0],[a[1]],a[2],0,a[3],'']})}}
+
+/* 2. Fin des blocs, semaines allégées et date de fin */
+window.blocOf=function(){return 1};
+window.isDeload=function(){return false};
+window.beforeStart=function(){return false};
+window.isSquatWeek=function(){return isoWeek()%2===1};
+PHASES.seche[1]='Déficit de base réglé dans ton profil. Objectif : perdre le gras en gardant la force.';
+PHASES.masse[1]='Surplus léger de 250 kcal. À ton niveau, monter plus vite ne fait que reprendre du gras.';
+
+/* 3. Réglages par défaut et reprise des anciennes données */
+DB.cfg.mod=3;CUR=null;VIEWB=null;
+if(!DB.cfg.kb)DB.cfg.kb=6;
+if(!DB.cfg.circ)DB.cfg.circ={tours:4,work:40,rest:60};
+if(!DB.cfg.volMin)DB.cfg.volMin=90;
+(function(){var C=DB.cfg.cardio;
+ if(!C)C=DB.cfg.cardio={on:true,min:15,salle:'velo',bras:'ellip',apres:{MAR:1,DIM:1}};
+ if(!C.apres)C.apres={MAR:1,DIM:1};
+ delete C.maison;delete C.apres.MAISON;delete C.apres.VOLLEY;
+ if(!CT[C.salle])C.salle='velo';if(!CT[C.bras])C.bras='ellip';
+ if(!C.v2){C.apres.BRAS=1;C.v2=1}
+ if(!DB.cfg.circV){if(DB.exOrder)delete DB.exOrder.MAISON;DB.cfg.circV=1}})();
+buildMaison();buildVolley();
+window.sessKeys=coreKeys;
+(function(){var d=daysCur();if(d.MAISON!==undefined)return;var used={};for(var k in d)used[d[k]]=1;
+ var pref=[4,1,3,5,2,6,0];for(var i=0;i<pref.length;i++)if(!used[pref[i]]){d.MAISON=pref[i];break}})();
+function gymMin(k){return k==='MAISON'?circMin():(k==='BRAS'?40:(k==='VOLLEY'?0:70))}
+function fixGym(){var c=false;for(var d in DB.sessions){var k=DB.sessions[d],x=DB.days[d];if(!x)continue;
+ if(k==='VOLLEY'){delete DB.sessions[d];x.gym=0;x.met=VOLMET;x.min=x.min||DB.cfg.volMin;c=true;continue}
+ if((k==='MAISON'||k==='BRAS')&&(x.gym===70||(k==='MAISON'&&x.gym===35))){x.gym=gymMin(k);c=true}
+ if(k==='MAISON'&&x.gym&&!x.gmet){x.gmet=CIRCMET;c=true}
+ if(k!=='MAISON'&&x.gmet){delete x.gmet;c=true}}
+ if(c)save()}
+fixGym();save();
+
+/* 4. Énergie : cardio à 50 % comme la muscu ; le circuit compte comme un effort plus intense que la muscu classique */
+var _cred=credited,_spent=spent;
+window.credited=function(x){return _cred(x)+Math.round(cardioKcal(x)*0.5)+Math.round(circExtra(x)*0.5)};
+window.spent=function(x){return _spent(x)+cardioKcal(x)+circExtra(x)};
+
+/* 5. Validation commune (bouton, mode guidé, calendrier) */
+function validateSess(k,jd,withC){var x=day(jd);
+ if(k==='VOLLEY'){x.met=VOLMET;x.min=DB.cfg.volMin;delete DB.plan[jd];return 'Volley enregistré · '+x.min+' min'}
+ DB.sessions[jd]=k;delete DB.plan[jd];x.gym=gymMin(k);
+ if(k==='MAISON')x.gmet=CIRCMET;else delete x.gmet;
+ if(withC&&!x.cardio&&cardioOn(k))setCardio(x,k);
+ return (withC&&cardioOn(k)?'Séance et cardio validés':SESS[k].n+' validée')+(jd!==today()?' le '+fmtD(jd):'')}
+$('doneSess').onclick=function(){var m=validateSess(CUR,curDay(),false);
+ save();drawWeek();drawJour();drawBilan();drawSess();toast(m)};
+
+/* 6. Minuteur de circuit : effort / changement / repos entre les tours, avec bips */
+var CS={ph:null,i:-1,end:0,left:0,run:false,tm:null,last:-1},WL=null;
+function tone(f,d,n){try{if(!ACTX)ACTX=new (window.AudioContext||window.webkitAudioContext)();if(ACTX.state==='suspended')ACTX.resume();
+ for(var i=0;i<(n||1);i++){var o=ACTX.createOscillator(),g=ACTX.createGain(),t0=ACTX.currentTime+i*(d+0.08);
+  o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(0.35,t0+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+d);o.connect(g);g.connect(ACTX.destination);o.start(t0);o.stop(t0+d+0.02)}}catch(e){}}
+function buzz(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
+function wake(on){try{if(on&&!WL&&navigator.wakeLock)navigator.wakeLock.request('screen').then(function(w){WL=w;w.addEventListener('release',function(){WL=null})}).catch(function(){});
+ if(!on&&WL){WL.release();WL=null}}catch(e){}}
+function circItems(){var st=liveSteps()[LIVE];return st&&st.ss==='C'?st.items:[]}
+function circPhases(){var c=circ(),N=circItems().length,P=[];
+ for(var r=0;r<c.tours;r++)for(var s=0;s<N;s++){P.push({t:'w',r:r,s:s,d:c.work});
+  if(s<N-1)P.push({t:'t',r:r,s:s+1,d:circTrans()});else if(r<c.tours-1)P.push({t:'r',r:r+1,s:0,d:c.rest})}
+ return P}
+function stopCirc(reset){if(CS.tm){clearInterval(CS.tm);CS.tm=null}
+ if(CS.run){CS.left=Math.max(0,(CS.end-Date.now())/1000);CS.run=false}
+ if(reset){CS.i=-1;CS.ph=null}wake(false)}
+function circSound(t){if(t==='w'){tone(880,0.18,3);buzz([200,80,200])}else{tone(520,0.3,1);buzz(150)}}
+function circNext(fresh){CS.i++;
+ if(CS.i>=CS.ph.length){stopCirc(false);CS.i=CS.ph.length;tone(990,0.25,4);buzz([300,100,300,100,300]);toast('Circuit terminé — bravo');paintCirc();return false}
+ CS.end+=CS.ph[CS.i].d*1000;if(fresh)circSound(CS.ph[CS.i].t);return true}
+function circTick(){var now=Date.now();
+ while(CS.run&&now>=CS.end){if(!circNext(now-CS.end<1500))return}
+ var left=Math.ceil((CS.end-now)/1000),p=CS.ph[CS.i];
+ if(p&&p.t!=='w'&&left<=3&&left>=1&&left!==CS.last){CS.last=left;tone(660,0.08,1)}
+ paintCirc()}
+function circGo(){
+ if(CS.i>=0&&CS.ph&&CS.i>=CS.ph.length){CS.i=-1}
+ if(CS.run){stopCirc(false);paintCirc();return}
+ if(CS.i<0){CS.ph=circPhases();if(!CS.ph.length)return;CS.i=0;CS.end=Date.now()+CS.ph[0].d*1000;circSound('w')}
+ else CS.end=Date.now()+CS.left*1000;
+ CS.run=true;CS.last=-1;wake(true);CS.tm=setInterval(circTick,200);paintCirc()}
+function circSkip(){if(CS.i<0||!CS.ph||CS.i>=CS.ph.length)return;
+ CS.end=Date.now();
+ if(CS.run){circTick();return}
+ CS.run=true;if(circNext(true)){CS.run=false;CS.left=CS.ph[CS.i].d}
+ paintCirc()}
+function paintCirc(){var box=$('circBig');if(!box)return;
+ var c=circ(),It=circItems(),N=It.length,p=CS.ph&&CS.i>=0&&CS.i<CS.ph.length?CS.ph[CS.i]:null,done=CS.ph&&CS.i>=CS.ph.length;
+ var left=p?(CS.run?Math.max(0,Math.ceil((CS.end-Date.now())/1000)):Math.ceil(CS.left)):(done?0:c.work);
+ var cls='',ph='',lbl='',sub='',tipI=0;
+ if(done){ph='Terminé';lbl='Circuit bouclé';sub=c.tours+' tours · appuie sur Terminer pour valider'}
+ else if(!p){ph='Prêt ?';lbl=It[0]?It[0].nom:'';sub='Tour 1 / '+c.tours;tipI=0}
+ else{cls=p.t;tipI=p.s;
+  ph=p.t==='w'?'Effort':(p.t==='t'?'Change de station':'Repos entre les tours');
+  lbl=(p.t==='w'?'':'Ensuite : ')+It[p.s].nom;
+  sub='Tour '+(p.r+1)+' / '+c.tours+' · station '+(p.s+1)+' / '+N+(CS.run?'':' · en pause')}
+ box.className='circbig '+cls;
+ $('cPh').textContent=ph;$('cLbl2').textContent=lbl;$('cTime').textContent=fmtT(left);$('cSub').textContent=sub;
+ var it=It[tipI];$('cTip').innerHTML=it&&!done?(it.tip+(it.alt?'<br><b>Plus facile :</b> '+it.alt:'')):'';
+ $('cGo').textContent=CS.run?'❚❚ Pause':(done?'↻ Recommencer':(p?'▶ Reprendre':'▶ Démarrer'));
+ $('cSkip').style.visibility=p?'visible':'hidden';
+ var li=$('cList').querySelectorAll('li');for(var i=0;i<li.length;i++)li[i].className=(p&&i===p.s)?'now':''}
+function drawCirc(){var c=circ(),It=circItems();
+ $('liveMain').innerHTML='<div class="circhead"><b>Circuit · '+c.tours+' tours.</b> '+c.work+' s d’effort, '+circTrans()+' s pour changer de station, '+c.rest+' s de repos entre les tours. Bips : 3 = effort, 1 = changement, tic-tac = 3 dernières secondes.</div>'+
+  '<div class="circbig" id="circBig"><div class="circph" id="cPh"></div><div class="circlbl" id="cLbl2"></div><div class="circt" id="cTime"></div><div class="circsub" id="cSub"></div></div>'+
+  '<div class="circtip" id="cTip"></div>'+
+  '<div class="circbtns"><button class="btn gold" id="cGo"></button><button class="btn ghost" id="cSkip">Passer ›</button></div>'+
+  '<ol class="circlist" id="cList">'+It.map(function(o){return '<li>'+o.nom+'</li>'}).join('')+'</ol>'+
+  '<div class="note">Garde l’écran allumé pendant le circuit. Si tu dois t’arrêter, mets en pause : le chrono reprend là où tu l’as laissé.</div>';
+ $('cGo').onclick=circGo;$('cSkip').onclick=circSkip;paintCirc()}
+
+/* 7. Mode séance : circuit chronométré, cardio en dernière étape (avec option de le passer) */
+var SKIPC=false;
+window.liveList=function(){var L=exList(CUR,1,false);
+ if(cardioOn(CUR)){var a=act(CUR);L.push({nom:'Cardio · '+a.n,sets:cfgC().min+' min',
+  tip:'Intensité modérée : tu peux parler par phrases courtes. Appuie sur Terminer à la fin, le cardio sera compté automatiquement.',
+  anc:false,mus:'Cardio',alt:'',ss:null,cardio:true})}
+ return L};
+var _ih=itemHTML;
+window.itemHTML=function(o){
+ if(o.cardio){var m=cfgC().min;
+  return '<div class="litem"><h3>'+o.nom+'</h3><div class="lsets">'+o.sets+'</div><div class="lmus">Cardio · intensité modérée'+(OPT[CUR]?' · optionnel':'')+'</div>'+
+  '<div class="ltip">'+o.tip+'</div><button class="btn gold" onclick="startTimer('+m*60+')">Lancer le minuteur '+m+' min</button>'+
+  '<button class="btn ghost" style="margin-top:8px" onclick="SKIPC=true;liveGo(liveSteps().length)">Terminer sans cardio</button></div>'}
+ var h=_ih(o);if(CUR==='VOLLEY'||CUR==='MAISON')h=h.replace(/<div class="lload">[\s\S]*?<\/div>/,'');return h};
+var _dl=drawLive;
+window.drawLive=function(){_dl();var r=$('liveRest'),t=$('timer');
+ if(LIVE===null){r.style.display='';t.style.display='';stopCirc(true);return}
+ var st=liveSteps()[LIVE];if(!st){r.style.display='';t.style.display='';return}
+ var isCirc=!!(SESS[CUR].circ&&st.ss==='C');
+ if(!isCirc&&CS.run){stopCirc(false)}
+ r.style.display=(st.items[0].cardio||isCirc||CUR==='VOLLEY')?'none':'';
+ t.style.display=isCirc?'none':'';
+ if(isCirc)drawCirc()};
+window.liveGo=function(n){
+ var ST=liveSteps();
+ if(n===null||n===undefined||isNaN(n)||n<0)return;
+ if(n>=ST.length){
+  var hadC=false;for(var i=0;i<ST.length;i++)if(ST[i].items[0].cardio)hadC=true;
+  var wc=hadC&&!SKIPC;SKIPC=false;
+  stopCirc(true);LIVE=null;LISTOPEN=false;drawLive();$('startSess').textContent='Commencer la séance';
+  var m=validateSess(CUR,curDay(),wc);
+  startTimer(0);save();drawWeek();drawJour();drawBilan();drawSess();toast(m);return}
+ LIVE=n;LISTOPEN=false;drawLive();startTimer(0);
+ try{$('liveCard').scrollIntoView({block:'start',behavior:'smooth'})}catch(e){}};
+window.toggleCardio=function(){var x=day(curDay());
+ if(x.cardio){x.cardio=0;delete x.cmet;delete x.cact}else setCardio(x,CUR);
+ save();drawSess();drawJour();drawBilan();toast(x.cardio?'Cardio validé':'Cardio retiré')};
+
+/* 8. Onglets de séances : 4 séances du programme + 2 options */
+window.drawTabs=function(){
+ var core=coreKeys(),all=allKeys(),h='',o='<span class="olab">Options</span>';
+ if(!CUR||all.indexOf(CUR)<0){var s=suggFor(today());CUR=(s&&core.indexOf(s)>-1)?s:core[0]}
+ function b(k){var S=SESS[k];return '<button data-k="'+k+'"'+(k===CUR?' class="on"':'')+'>'+S.s+'<i>'+S.d+'</i></button>'}
+ core.forEach(function(k){h+=b(k)});
+ all.forEach(function(k){if(OPT[k])o+=b(k)});
+ $('sessTabs').innerHTML=h;
+ var oe=$('sessOpt');if(!oe){oe=document.createElement('div');oe.className='sess-tabs';oe.id='sessOpt';$('sessTabs').parentNode.insertBefore(oe,$('sessTabs').nextSibling)}
+ oe.innerHTML=o;
+ var bt=document.querySelectorAll('#sessTabs button,#sessOpt button');
+ for(var j=0;j<bt.length;j++)bt[j].onclick=function(){CUR=this.dataset.k;LIVE=null;stopCirc(true);
+  $('startSess').textContent='Commencer la séance';drawTabs();drawSess();drawLive()}};
+
+/* 9. Liste des exercices : règle du coach, circuit, volley, ligne cardio */
+var _dss=drawSess;
+window.drawSess=function(){_dss();
+ var C=cfgC(),c=circ(),list=$('exList');
+ var R={MAISON:'<b>Pourquoi un circuit ?</b> Avec une kettlebell de '+kbTxt()+' kg, des séries classiques ne stimulent plus tes épaules ni tes pectoraux. En circuit, c’est la <b>densité</b> qui travaille : pas de repos passif, le cœur reste haut, les épaules et les abdos accumulent du temps sous tension.<br><br>'+
+   '<b>Progression</b>, un seul paramètre à la fois, toutes les deux semaines si c’est propre : 4 tours → 5 tours → effort 45 s → kettlebell plus lourde. Tout se règle dans <b>Réglages → Circuit maison & cardio</b>.<br><br>'+
+   '<b>La technique avant le chrono</b> : si la forme se dégrade, arrête la station 5 s plus tôt.',
+  BRAS:'<b>Séance optionnelle</b>, environ 40 min (+ cardio si tu as le temps). Fais-la seulement si tes charges tiennent et que tu dors bien : en sèche, une 5<sup>e</sup> séance est un bonus, pas une obligation.<br><br>'+
+   '<b>Meilleur créneau</b> : vendredi, ou mercredi. Évite le lundi (triceps et épaules sortent de la séance Pecs) et la veille du Dos (biceps fatigués pour tes tractions).<br><br>'+
+   '<b>Double progression</b> : quand toutes tes séries atteignent le haut de la fourchette, ajoute 1 kg ou un cran de poulie.',
+  VOLLEY:'<b>Les 10 minutes d’échauffement ne sont pas négociables</b> : ce sont elles qui protègent tes épaules et tes genoux. Le volley est compté comme une activité, à 50 % comme la muscu.<br><br>'+
+   'Évite le volley la veille ou le lendemain de la séance Jambes : tes jambes ont besoin de 48 h entre les deux.'};
+ $('progRule').innerHTML=R[CUR]||'<b>Double progression</b> : quand toutes tes séries atteignent le haut de la fourchette avec RIR 2, ajoute 2,5 kg (1 kg sur les isolations). En sèche, <b>tenir tes charges</b> est déjà une victoire.';
+ $('doneSess').textContent=CUR==='VOLLEY'?'Valider ce volley ('+DB.cfg.volMin+' min)':'Valider cette séance aujourd’hui';
+ if(CUR==='MAISON'||CUR==='VOLLEY'){var ld=list.querySelectorAll('.ex-load');for(var i=0;i<ld.length;i++)ld[i].style.display='none';
+  var al=list.querySelectorAll('.alt b');for(var q=0;q<al.length;q++)al[q].textContent='Plus facile :'}
+ if(CUR==='MAISON'){var ss=list.querySelectorAll('.ss');for(var j=0;j<ss.length;j++)ss[j].textContent='Circuit';
+  list.insertAdjacentHTML('afterbegin','<div class="circ-intro"><span class="big">'+c.tours+' tours · '+c.work+' s / '+circTrans()+' s · ≈ '+circMin()+' min</span>'+
+   'Les 6 stations s’enchaînent sans pause, '+c.rest+' s de repos à la fin de chaque tour. Lance la séance : le <b>minuteur de circuit</b> te guide station par station, avec des bips.</div>')}
+ if(CUR==='VOLLEY'){list.insertAdjacentHTML('afterbegin','<div class="volrow"><span>Durée du volley</span><input type="number" id="volMinIn" inputmode="numeric" value="'+DB.cfg.volMin+'"><span>min</span></div>');
+  $('volMinIn').onchange=function(){var v=parseInt(this.value);if(!v||v<20||v>240){toast('Entre 20 et 240 min');this.value=DB.cfg.volMin;return}
+   DB.cfg.volMin=v;buildVolley();save();drawSess();drawPicker();toast('Volley : '+v+' min')}}
+ if(!cardioOn(CUR))return;
+ var a=act(CUR),done=!!day(curDay()).cardio;
+ list.insertAdjacentHTML('beforeend','<div class="ex" style="border-left:2px solid var(--p35);padding-left:8px">'+
+  '<div class="ex-n" style="color:var(--p35)">+</div><div class="ex-b"><h4>Cardio · '+a.n+(OPT[CUR]?' <span class="ss">option</span>':'')+'</h4>'+
+  '<div class="sets">'+C.min+' min · intensité modérée</div>'+
+  '<div class="mus">Cœur &amp; endurance · '+Math.round(sportKcal(a.met,C.min)*0.5)+' kcal retenues</div>'+
+  '<div class="tip">Tu dois pouvoir parler par phrases courtes. Pas de sprint : on protège la récupération.</div>'+
+  '<button class="btn sm ghost" style="margin-top:8px" onclick="startTimer('+C.min*60+')">Lancer '+C.min+' min</button></div>'+
+  '<div class="ex-load"><button class="btn sm '+(done?'green':'ghost')+'" style="width:100%;padding:8px 4px" onclick="toggleCardio()">'+(done?'✓ fait':'Fait ?')+'</button></div></div>')};
+
+/* 10. Onglet Jour : circuit et cardio dans le calcul */
+var _dj=drawJour;
+window.drawJour=function(){_dj();
+ var x=day(curDay());
+ $('topWk').textContent='S'+isoWeek()+' · '+(isSquatWeek()?'squat':'soulevé')+' samedi';
+ var st=stepKcal(x.steps),gm=gymCred(x),kc=Math.round(cardioKcal(x)*0.5),ac=Math.round(sportKcal(x.met,x.min)*0.5),
+  df=defNow(),B=budget(),raw=budgetRaw(x),ci=!!(x.gmet&&x.gym),gl=ci?'circuit':'muscu';
+ var cl='<b>'+base()+'</b> base <b>+ '+st+'</b> pas ('+(x.steps||0)+')'+
+  (x.gym?' <b>+ '+gm+'</b> '+gl+' ('+x.gym+' min, 50 %)':'')+
+  (x.cardio?' <b>+ '+kc+'</b> cardio ('+x.cardio+' min, 50 %)':'')+
+  (x.met&&x.min?' <b>+ '+ac+'</b> '+(ACTNAME[String(x.met)]||'sport')+' ('+x.min+' min, 50 %)':'')+
+  (df>=0?' <b>- '+df+'</b> déficit':' <b>+ '+Math.abs(df)+'</b> surplus')+
+  '<br><span class="eq">= '+raw+' kcal</span>';
+ if(B!==raw)cl+='<br><span class="eq">→ '+B+' kcal</span> '+(B===FLOOR?'(plancher de '+FLOOR+' appliqué)':'(plafond de 3200 appliqué)');
+ $('calcLine').innerHTML=cl;
+ var ch='<span class="ac '+(x.steps?'pas':'vide')+'">'+(x.steps?(x.steps).toLocaleString('fr-FR')+' pas <b>+'+st+'</b>':'pas non saisis')+'</span>';
+ if(x.gym)ch+='<span class="ac gym">'+(ci?'Circuit':'Muscu')+' '+x.gym+' min <b>+'+gm+'</b></span>';
+ if(x.cardio)ch+='<span class="ac spo">Cardio '+x.cardio+' min <b>+'+kc+'</b></span>';
+ if(x.met&&x.min)ch+='<span class="ac spo">'+(ACTNAME[String(x.met)]||'Activité')+' '+x.min+' min <b>+'+ac+'</b></span>';
+ if(!x.gym&&!x.cardio&&!(x.met&&x.min))ch+='<span class="ac vide">aucune séance</span>';
+ $('actChips').innerHTML=ch;
+ if(x.gym)$('gymKcalTxt').textContent='+'+gm;
+ $('sSport').textContent=gm+ac+kc;$('sTot').textContent=credited(x)};
+
+/* 11. Semaine : objectif 4 séances, options en bonus, calendrier avec les options */
+var _dw=drawWeek;
+window.drawWeek=function(){fixGym();_dw();
+ var W=weekDates(),core=coreKeys(),n=0,bon=[],goal=core.length;
+ for(var i=0;i<7;i++){var s=DB.sessions[W[i]],x=DB.days[W[i]];
+  if(s&&SESS[s]){if(OPT[s])bon.push(SESS[s].s);else n++}
+  if(x&&x.met===VOLMET&&x.min)bon.push('Volley')}
+ var bt=bon.length?' <span style="color:var(--p35)">+ bonus : '+bon.join(', ')+'</span>':'';
+ $('weekNote').innerHTML=(n===0?'<b>Aucune séance validée cette semaine.</b> Touche un jour du calendrier pour y placer une séance.'
+  :(n<goal?'<b>'+n+' / '+goal+' séances</b> validées. Il te reste '+(goal-n)+' séance'+(goal-n>1?'s':'')+' d’ici dimanche.'
+  :'<b>'+n+' / '+goal+' séances</b> — semaine complète.'))+bt;
+ if(!$('weekWarn').innerHTML){
+  for(var k=0;k<6;k++){var a=DB.sessions[W[k]]||DB.plan[W[k]],b=DB.sessions[W[k+1]]||DB.plan[W[k+1]];
+   if(a==='DIM'&&b==='BRAS'){$('weekWarn').innerHTML='<div class="warn"><b>Bras & épaules</b> le lendemain de Pecs : triceps et épaules n’auront pas récupéré. Décale-la au mercredi ou au vendredi.</div>';break}
+   if(a==='BRAS'&&(b==='MAR'||b==='DIM')){$('weekWarn').innerHTML='<div class="warn"><b>Bras & épaules</b> la veille de '+SESS[b].s+' : '+(b==='MAR'?'tes biceps seront fatigués pour les tractions':'tes triceps seront fatigués pour le développé incliné')+'. Décale-la si tu peux.</div>';break}}}};
+window.drawPicker=function(){
+ var p=$('picker');if(!PICKDAY){p.classList.remove('on');return}
+ p.classList.add('on');
+ var d=new Date(PICKDAY+'T00:00:00'),J=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],past=PICKDAY<=today();
+ $('pickTitle').textContent=J[d.getDay()]+' '+fmtD(PICKDAY)+(past?' — valider':' — planifier');
+ var ks=coreKeys().concat(['BRAS']),h='';
+ for(var i=0;i<ks.length;i++){var S=SESS[ks[i]];h+='<button data-k="'+ks[i]+'"><b>'+S.n+'</b><i>'+(OPT[ks[i]]?'option · '+gymMin(ks[i])+' min':S.d)+'</i></button>'}
+ h+='<button data-k="VOLLEY"><b>Volley</b><i>option · '+DB.cfg.volMin+' min</i></button><button data-k="__clear"><b>Repos / effacer</b></button>';
+ $('pickOpts').innerHTML=h;
+ var bs=$('pickOpts').querySelectorAll('button');
+ for(var j=0;j<bs.length;j++)bs[j].onclick=function(){var k=this.dataset.k,d2=PICKDAY,m;
+  if(k==='__clear'){delete DB.sessions[d2];delete DB.plan[d2];var x=DB.days[d2];
+   if(x){x.gym=0;delete x.gmet;x.cardio=0;delete x.cmet;delete x.cact;if(x.met===VOLMET){x.met=0;x.min=0}}m='Journée effacée'}
+  else if(k==='VOLLEY'){var y=day(d2);if(DB.sessions[d2]){delete DB.sessions[d2];y.gym=0;delete y.gmet}m=validateSess('VOLLEY',d2)}
+  else if(d2<=today())m=validateSess(k,d2,false);
+  else{DB.plan[d2]=k;m=SESS[k].n+' planifiée le '+fmtD(d2)}
+  PICKDAY=null;save();drawWeek();drawPicker();drawJour();drawBilan();toast(m)}};
+window.drawMod=function(){$('modLbl').textContent='3 salle + 1 maison'};
+window.drawProg=function(){};
+var _dpr=drawProgress;
+window.drawProgress=function(){withKeys(allKeys,_dpr)};
+var _dp=drawPoids;
+window.drawPoids=function(){_dp();$('wkTarget').textContent='cible '+DB.cfg.goal.toFixed(1)+' kg'};
+
+/* 12. Bilan et exports */
+var _db=drawBilan;
+window.drawBilan=function(){_db();if(!cfgC().on)return;
+ var n=$('cardioNote'),h=n.innerHTML;
+ h=h.replace(/<b>Aucun cardio nécessaire\.<\/b>[^]*$/,'Ton cardio de fin de séance suffit, inutile d’en ajouter.');
+ h=h.replace(/<b>C'est le seul cas[^]*$/,'<b>Ton cardio de fin de séance ne compense pas</b> : vise 2 000 pas de plus par jour, dehors.');
+ h=h.replace('Pas besoin de cardio : ','');
+ n.innerHTML=h};
+var _ds=daySummary;
+window.daySummary=function(d){d=d||today();var L=_ds(d).split('\n'),x=day(d),ci=!!(x.gmet&&x.gym);
+ L[0]='JOURNEE DU '+fmtD(d)+'  ·  semaine '+(isSquatWeek()?'squat':'soulevé de terre');
+ L[1]='Phase : '+PHASES[DB.cfg.phase][0]+'  |  Programme : 3 séances salle + circuit maison (+ options)  |  Cardio salle : '+(cfgC().on?cfgC().min+' min':'désactivé');
+ for(var i=0;i<L.length;i++){
+  if(L[i].indexOf('  Dépensé')===0)L[i]='  Dépensé  : '+credited(x)+' kcal retenus (base '+base()+' + pas '+stepKcal(x.steps)+
+   (x.gym?' + '+(ci?'circuit':'muscu')+' '+gymCred(x)+' sur '+(gymKcal(x.gym)+circExtra(x)):'')+
+   (x.cardio?' + cardio '+Math.round(cardioKcal(x)*0.5)+' sur '+cardioKcal(x):'')+
+   (x.met&&x.min?' + '+(ACTNAME[String(x.met)]||'sport')+' '+Math.round(sportKcal(x.met,x.min)*0.5)+' sur '+sportKcal(x.met,x.min):'')+')';
+  if(L[i].indexOf('  Pas      :')===0&&x.cardio){L.splice(i+1,0,'  Cardio   : '+x.cardio+' min '+(x.cact||'')+' · +'+Math.round(cardioKcal(x)*0.5)+' kcal retenus sur '+cardioKcal(x));i++}
+  if(ci&&L[i].indexOf('SEANCE — ')===0)L[i]='SEANCE — '+SESS.MAISON.n+' · '+circ().tours+' tours '+circ().work+'/'+circTrans()+' s · '+x.gym+' min'}
+ return L.join('\n')};
+var _ex=exportTxt;
+window.exportTxt=function(){var L=_ex().split('\n'),C=cfgC(),ks=allKeys(),ap=[],c=circ();
+ for(var i=0;i<ks.length;i++)if(cardioOn(ks[i]))ap.push(SESS[ks[i]].s);
+ L.splice(1,2,'Phase '+PHASES[DB.cfg.phase][0]+' · 3 séances salle + circuit maison (KB '+DB.cfg.kb+' kg, '+c.tours+' tours '+c.work+' s) · options : Bras & épaules, Volley · ancrage samedi : '+(isSquatWeek()?'squat':'soulevé de terre'),
+  'Cardio salle : '+(C.on?C.min+' min après '+(ap.join(', ')||'aucune séance'):'désactivé'));
+ for(var j=0;j<L.length;j++)if(L[j].indexOf('PROFIL')===0)L[j]=L[j].replace(/ au \d\d\/\d\d$/,'');
+ var keys=dayKeys(14),nc=0,mc=0,nci=0,nb=0,nv=0;
+ for(var k=0;k<keys.length;k++){var x=DB.days[keys[k]],s=DB.sessions[keys[k]];if(x&&x.cardio){nc++;mc+=x.cardio}
+  if(s==='MAISON')nci++;if(s==='BRAS')nb++;if(x&&x.met===VOLMET&&x.min)nv++}
+ var di=L.indexOf('--- DONNEES (ne pas modifier) ---');
+ if(di>0)L.splice(di,0,'CARDIO, CIRCUIT ET OPTIONS — 14 DERNIERS JOURS','  Cardio : '+nc+' séance(s) · '+mc+' min au total',
+  '  Circuit maison : '+nci+' · Bras & épaules : '+nb+' · Volley : '+nv,'');
+ return L.join('\n')};
+
+/* 13. Interface : on masque l'ancien programme, carte « Circuit maison & cardio » dans Réglages */
+$('modSeg').style.display='none';
+var pc=$('blocs').closest('.card');if(pc)pc.style.display='none';
+var sd=$('cfgStart');if(sd&&sd.parentNode)sd.parentNode.style.display='none';
+var card=document.createElement('div');card.className='card';card.id='cardioCard';
+card.innerHTML='<div class="eyebrow">Circuit maison &amp; cardio<span id="cLbl"></span></div>'+
+ '<div class="row"><div><label class="fld" for="cKb">KB (kg)</label><input type="number" step="0.5" id="cKb" inputmode="decimal"></div>'+
+ '<div><label class="fld" for="cTours">Tours</label><input type="number" id="cTours" inputmode="numeric"></div>'+
+ '<div><label class="fld" for="cWork">Effort (s)</label><input type="number" step="5" id="cWork" inputmode="numeric"></div></div>'+
+ '<div class="note" id="cCircNote"></div>'+
+ '<div class="cfgsub">Cardio à la salle</div>'+
+ '<label class="chk"><input type="checkbox" id="cOn"><span>Ajouter un cardio à la fin des séances salle</span></label>'+
+ '<div style="height:12px"></div><div class="row"><div><label class="fld" for="cMin">Durée (min)</label><input type="number" id="cMin" inputmode="numeric"></div><div></div></div>'+
+ '<div style="height:11px"></div><label class="fld" for="cSalle">Après Dos, Jambes, Pecs</label><select id="cSalle"></select>'+
+ '<div style="height:11px"></div><label class="fld" for="cBras">Après Bras &amp; épaules</label><select id="cBras"></select>'+
+ '<div style="height:11px"></div><label class="fld">Après quelles séances</label><div class="dpick" id="cSess"></div>'+
+ '<div class="note" id="cNote"></div>'+
+ '<div class="cfgsub">Volley</div>'+
+ '<div class="row"><div><label class="fld" for="cVol">Durée habituelle (min)</label><input type="number" id="cVol" inputmode="numeric"></div><div></div></div>';
+var ref=$('daysCfg').closest('.card');ref.parentNode.insertBefore(card,ref.nextSibling);
+
+function majCardio(){save();drawCardioCfg();drawSess();drawLive()}
+function majCirc(){buildMaison();save();drawCardioCfg();drawTabs();drawSess();drawVolume();drawDaysCfg();drawPicker()}
+function drawCardioCfg(){
+ var C=cfgC(),c=circ(),ks=['MAR','SAM','DIM','BRAS'],o1='',o2='',h='';
+ for(var k in CT){o1+='<option value="'+k+'"'+(k===C.salle?' selected':'')+'>'+CT[k][0]+'</option>';
+  o2+='<option value="'+k+'"'+(k===C.bras?' selected':'')+'>'+CT[k][0]+'</option>'}
+ $('cSalle').innerHTML=o1;$('cBras').innerHTML=o2;$('cOn').checked=!!C.on;
+ [['cMin',C.min],['cKb',DB.cfg.kb],['cTours',c.tours],['cWork',c.work],['cVol',DB.cfg.volMin]].forEach(function(f){if(document.activeElement!==$(f[0]))$(f[0]).value=f[1]});
+ for(var i=0;i<ks.length;i++)h+='<button data-k="'+ks[i]+'"'+(C.apres[ks[i]]?' class="on"':'')+'>'+SESS[ks[i]].s+'</button>';
+ $('cSess').innerHTML=h;$('cSess').style.opacity=C.on?'1':'.4';
+ var b=$('cSess').querySelectorAll('button');
+ for(var j=0;j<b.length;j++)b[j].onclick=function(){var k=this.dataset.k;if(C.apres[k])delete C.apres[k];else C.apres[k]=1;majCardio()};
+ $('cLbl').textContent=c.tours+' tours · '+circMin()+' min';
+ var tot=sportKcal(CIRCMET,circMin());
+ $('cCircNote').innerHTML='<b>'+c.tours+' tours de 6 stations</b>, '+c.work+' s d’effort / '+circTrans()+' s pour changer, '+c.rest+' s de repos entre les tours : <b>≈ '+circMin()+' min</b> échauffement compris, ≈ '+tot+' kcal dont '+Math.round(tot*0.5)+' comptées.<br>'+
+  'Progression : 4 → 5 tours, puis 40 → 45 s d’effort, puis une kettlebell plus lourde. <b>À la maison, c’est le seul entraînement</b> : marche, rando et sorties se font dehors et passent par tes pas.';
+ var a=CT[C.salle]||CT.velo,t2=sportKcal(a[1],C.min);
+ $('cNote').innerHTML='<b>Est-ce utile ?</b> Oui pour le cœur, l’endurance et la récupération, beaucoup moins pour la sèche. '+
+  C.min+' min de '+a[0].toLowerCase()+' ≈ <b>'+t2+' kcal</b>, dont <b>'+Math.round(t2*0.5)+'</b> comptées dans ton plafond (50 %, comme la muscu). Tes pas restent le levier n°1.<br><br>'+
+  '<b>Intensité modérée</b> : tu dois pouvoir parler par phrases courtes. Par défaut, pas de cardio après Jambes : squats et soulevés de terre passent avant. Après Bras & épaules, le cardio est <b>optionnel</b> : le mode séance propose « Terminer sans cardio ».'}
+$('cOn').onchange=function(){cfgC().on=this.checked;majCardio();toast(this.checked?'Cardio activé':'Cardio désactivé')};
+$('cMin').onchange=function(){var v=parseInt(this.value);
+ if(!v||v<5||v>60){toast('Entre 5 et 60 min');this.value=cfgC().min;return}cfgC().min=v;majCardio()};
+$('cSalle').onchange=function(){cfgC().salle=this.value;majCardio()};
+$('cBras').onchange=function(){cfgC().bras=this.value;majCardio()};
+$('cKb').onchange=function(){var nv=parseFloat((this.value||'').replace(',','.'));
+ if(!nv||nv<1||nv>60){toast('Poids invalide');this.value=DB.cfg.kb;return}
+ DB.cfg.kb=nv;majCirc();toast('Kettlebell : '+nv+' kg')};
+$('cTours').onchange=function(){var v=parseInt(this.value);
+ if(!v||v<2||v>8){toast('Entre 2 et 8 tours');this.value=circ().tours;return}circ().tours=v;majCirc();toast(v+' tours')};
+$('cWork').onchange=function(){var v=parseInt(this.value);
+ if(!v||v<20||v>50){toast('Entre 20 et 50 s');this.value=circ().work;return}circ().work=v;majCirc();toast('Effort : '+v+' s')};
+$('cVol').onchange=function(){var v=parseInt(this.value);
+ if(!v||v<20||v>240){toast('Entre 20 et 240 min');this.value=DB.cfg.volMin;return}DB.cfg.volMin=v;buildVolley();save();drawSess();drawPicker();toast('Volley : '+v+' min')};
+
+foldInit();redraw();drawCardioCfg();
+</script>
 </body>
 </html>
